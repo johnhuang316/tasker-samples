@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="網頁切版概念樣品，使用合成內容示範響應式版面。">
+  <title>留白日常｜切版概念樣品</title>
+  <style>
+    :root{--ink:#1f2a31;--muted:#69777d;--paper:#fffdf8;--bg:#edf2f0;--accent:#276e68;--accent-dark:#174c49;--warm:#f2d3a7;--line:#dbe4e1;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.7}.demo{padding:8px 16px;text-align:center;background:var(--accent-dark);color:#effffb;font-size:13px;letter-spacing:.06em}.wrap{max-width:1080px;margin:auto;padding:0 22px 68px}header{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:.08em}.mark{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:var(--warm);color:var(--accent-dark);font-size:20px}.nav{display:flex;align-items:center;gap:18px;color:var(--muted);font-size:14px}.nav a{text-decoration:none;color:inherit}.nav a:hover{color:var(--accent)}.nav .cta{padding:8px 14px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:38px;align-items:center;padding:56px 0 58px}.eyebrow{color:var(--accent);font-size:13px;font-weight:850;letter-spacing:.14em}.hero h1{max-width:620px;margin:12px 0 18px;font-size:clamp(40px,6vw,70px);line-height:1.17;letter-spacing:-.04em}.lead{max-width:560px;margin:0;color:var(--muted);font-size:18px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:999px;padding:10px 18px;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.primary{color:#fff;background:var(--accent)}.secondary{color:var(--accent-dark);background:transparent}.visual{min-height:360px;border-radius:44% 44% 18px 18px;background:linear-gradient(145deg,#d9eeea,#f8dfbd);position:relative;overflow:hidden;box-shadow:0 22px 50px rgba(31,63,63,.13)}.visual:before,.visual:after{content:"";position:absolute;border:1px solid rgba(39,110,104,.25);border-radius:50%;left:50%;transform:translateX(-50%)}.visual:before{width:280px;height:280px;top:38px}.visual:after{width:190px;height:190px;top:83px}.shape{position:absolute;left:50%;top:126px;transform:translateX(-50%) rotate(-8deg);width:112px;height:148px;border-radius:52% 48% 46% 54%;background:#fffdf8;box-shadow:20px 17px 0 rgba(255,255,255,.36),inset -13px -16px 0 #efdcc5}.caption{position:absolute;left:22px;bottom:20px;padding:7px 12px;border-radius:10px;background:rgba(255,253,248,.84);color:var(--accent-dark);font-size:13px}.section{padding:54px 0}.section h2{margin:0;font-size:clamp(30px,4vw,46px);line-height:1.22;letter-spacing:-.03em}.intro{max-width:580px;color:var(--muted);margin:12px 0 25px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:23px;border:1px solid var(--line);border-radius:20px;background:rgba(255,253,248,.84);box-shadow:0 10px 28px rgba(31,63,63,.05)}.card .num{color:var(--accent);font-size:12px;font-weight:850;letter-spacing:.12em}.card h3{margin:13px 0 7px;font-size:21px}.card p{margin:0;color:var(--muted)}.demo-panel{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px;margin-top:28px}.panel{padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--paper)}.panel h3{margin:0 0 9px;font-size:22px}.panel p{margin:0 0 16px;color:var(--muted);font-size:14px}.preview{min-height:190px;padding:20px;border:1px dashed #b7ceca;border-radius:15px;background:linear-gradient(145deg,#f7fbf9,#fff8ee)}.preview .bar{height:10px;width:46%;border-radius:99px;background:var(--accent);opacity:.75;margin-bottom:22px}.preview .line{height:9px;border-radius:99px;background:#d3e3df;margin:10px 0}.preview .line.short{width:64%}.status{display:none;margin-top:13px;padding:10px 12px;border-radius:10px;background:#e7f4e9;color:#2f6b3c;font-size:13px}.status.show{display:block}footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:760px){.wrap{padding:0 16px 50px}header{min-height:66px}.nav a:not(.cta){display:none}.hero,.demo-panel{grid-template-columns:1fr;gap:26px;padding-top:34px}.visual{min-height:290px}.cards{grid-template-columns:1fr}.section{padding:40px 0}.hero h1{font-size:clamp(38px,12vw,58px)}}
+  </style>
+</head>
+<body>
+  <div class="demo">Concept Demo｜概念樣品・合成內容・非正式網站</div>
+  <div class="wrap">
+    <header>
+      <div class="brand"><span class="mark">留</span><span>留白日常</span></div>
+      <nav class="nav" aria-label="主要導覽"><a href="#story">頁面介紹</a><a href="#demo">切版示範</a><a class="cta" href="#demo">查看概念</a></nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div><div class="eyebrow">A SIMPLE LAYOUT STUDY</div><h1>讓內容在畫面裡留一點呼吸。</h1><p class="lead">這是一個依照「大概設計圖」情境製作的響應式切版概念頁，先示範版面層次、卡片內容與手機閱讀時的排列方式。</p><div class="actions"><a class="btn primary" href="#demo">看切版流程</a><a class="btn secondary" href="#story">閱讀介紹</a></div></div>
+        <div class="visual" aria-label="合成視覺概念"><div class="shape"></div><div class="caption">桌機與手機版皆可檢視</div></div>
+      </section>
+      <section class="section" id="story"><div class="eyebrow">LAYOUT NOTES</div><h2>先把畫面結構做清楚。</h2><p class="intro">概念頁使用合成內容，重點放在前端版面結構、間距、文字階層與響應式排列；正式素材與品牌方向仍需依實際設計稿調整。</p><div class="cards"><article class="card"><div class="num">01｜HERO</div><h3>第一眼的資訊層級</h3><p>標題、說明與主要行動集中在首屏，保留足夠留白讓視線先找到重點。</p></article><article class="card"><div class="num">02｜CONTENT</div><h3>內容以卡片分組</h3><p>使用一致的間距與邊界呈現段落，便於後續替換成真實文字與圖片。</p></article><article class="card"><div class="num">03｜RESPONSIVE</div><h3>手機畫面自然換行</h3><p>小螢幕時欄位改為單欄，導覽與按鈕仍維持容易操作的尺寸。</p></article></div></section>
+      <section class="section" id="demo"><div class="demo-panel"><div class="panel"><h3>切版概念操作</h3><p>按下按鈕模擬完成一個畫面檢視流程。資料只保存在目前瀏覽器，不會送出任何請求。</p><button class="btn primary" id="inspect" type="button">完成畫面檢視</button><div class="status" id="status" role="status">已完成概念檢視；正式版可再依設計稿補上實際內容與互動。</div></div><div class="panel"><h3>頁面預覽</h3><div class="preview" aria-label="頁面預覽示意"><div class="bar"></div><div class="line"></div><div class="line short"></div><div class="line"></div><div class="line short"></div></div></div></div></section>
+    </main>
+    <footer>留白日常｜切版概念樣品。使用合成資料；未串接正式後台、外部 API 或業主素材。</footer>
+  </div>
+  <script>
+    const button=document.querySelector('#inspect');const status=document.querySelector('#status');
+    button.addEventListener('click',()=>{status.classList.add('show');localStorage.setItem('tasker-cutting-demo-inspected','true');});
+  </script>
+</body>
+</html>
