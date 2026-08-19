@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蔬菜價格趨勢整理｜Concept Demo</title>
+  <style>
+    :root { --ink:#172033; --muted:#687386; --line:#e5e9f0; --brand:#1d6b56; --brand-soft:#e5f4ee; --warm:#fff7e8; --up:#b54735; --down:#16704e; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f6f8fb; font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; }
+    .wrap { max-width:1040px; margin:0 auto; padding:28px 18px 56px; }
+    .hero { background:linear-gradient(135deg,#183b32,#27765f); color:#fff; border-radius:24px; padding:30px; box-shadow:0 14px 34px rgba(23,32,51,.12); }
+    .eyebrow { letter-spacing:.12em; font-size:12px; font-weight:700; opacity:.8; }
+    h1 { margin:10px 0 8px; font-size:clamp(28px,5vw,44px); line-height:1.15; }
+    .hero p { margin:0; max-width:720px; line-height:1.75; color:#e7f4ef; }
+    .notice { display:inline-flex; gap:8px; margin-top:20px; padding:8px 12px; border-radius:999px; background:#ffffff1c; font-size:13px; }
+    .panel { margin-top:18px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(23,32,51,.05); }
+    .controls { display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:end; }
+    label { display:grid; gap:7px; color:var(--muted); font-size:13px; font-weight:700; }
+    select, button { width:100%; min-height:46px; border:1px solid #d7dde7; border-radius:11px; padding:0 13px; background:#fff; color:var(--ink); font-size:15px; }
+    button { border:0; background:var(--brand); color:#fff; font-weight:700; cursor:pointer; padding:0 20px; }
+    button:hover { background:#15513f; }
+    .section-head { display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin-bottom:14px; }
+    h2 { margin:0; font-size:20px; }
+    .muted { color:var(--muted); font-size:13px; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .stat { padding:16px; border:1px solid var(--line); border-radius:14px; background:#fbfcfe; }
+    .stat span { display:block; color:var(--muted); font-size:13px; margin-bottom:7px; }
+    .stat strong { font-size:24px; }
+    .up { color:var(--up); } .down { color:var(--down); }
+    .chart-wrap { margin-top:16px; border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff; }
+    svg { display:block; width:100%; height:auto; }
+    .table-wrap { overflow:auto; margin-top:16px; border:1px solid var(--line); border-radius:14px; }
+    table { width:100%; border-collapse:collapse; min-width:500px; }
+    th, td { padding:12px 14px; text-align:left; border-bottom:1px solid var(--line); font-size:14px; }
+    th { background:#fbfcfe; color:var(--muted); font-weight:700; }
+    tr:last-child td { border-bottom:0; }
+    .empty { padding:28px; color:var(--muted); text-align:center; }
+    .foot { margin-top:18px; color:var(--muted); line-height:1.7; font-size:13px; }
+    @media (max-width:700px) { .controls, .stats { grid-template-columns:1fr; } .hero { padding:24px; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">CONCEPT DEMO／概念樣品／非正式系統</div>
+      <h1>蔬菜價格趨勢整理</h1>
+      <p>用模擬的拍賣市場資料示範「市場 × 品項」的整理、分類與價格趨勢檢視流程。正式合作後可再接上確認過的公開資料來源與實際更新排程。</p>
+      <div class="notice">資料皆為 mock，僅供流程展示</div>
+    </section>
+
+    <section class="panel" aria-label="報表條件">
+      <div class="section-head"><h2>選擇查詢條件</h2><span class="muted">目前示範 7 天資料</span></div>
+      <div class="controls">
+        <label>拍賣市場
+          <select id="market"><option>台北市場</option><option>台中市場</option><option>高雄市場</option></select>
+        </label>
+        <label>品項
+          <select id="item"><option>高麗菜</option><option>番茄</option><option>小白菜</option></select>
+        </label>
+        <button id="generate" type="button">產生趨勢報表</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-live="polite">
+      <div class="section-head"><h2 id="report-title">台北市場／高麗菜</h2><span class="muted" id="status">準備完成</span></div>
+      <div class="stats">
+        <div class="stat"><span>最新價格</span><strong id="latest">—</strong></div>
+        <div class="stat"><span>7 天平均</span><strong id="average">—</strong></div>
+        <div class="stat"><span>期間變化</span><strong id="change">—</strong></div>
+      </div>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 760 210" role="img" aria-label="價格趨勢折線圖"></svg></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>日期</th><th>分類後品項</th><th>價格（元／斤）</th><th>相對前日</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+    <p class="foot">此 Concept Demo 沒有連接正式 API、登入、資料庫或通知服務。正式版本會依資料來源、品項對照規則、更新頻率與報表格式補上抓取、清理、例外處理及部署設定。</p>
+  </main>
+<script>
+  const DATES = ['08/13','08/14','08/15','08/16','08/17','08/18','08/19'];
+  const DATA = {
+    '台北市場': {
+      '高麗菜':[28,30,29,32,34,33,36], '番茄':[46,45,48,50,49,52,51], '小白菜':[24,23,25,24,26,27,28]
+    },
+    '台中市場': {
+      '高麗菜':[26,27,28,27,30,31,30], '番茄':[42,44,43,45,47,46,48], '小白菜':[21,22,21,23,24,24,25]
+    },
+    '高雄市場': {
+      '高麗菜':[25,26,27,29,28,30,32], '番茄':[40,41,43,42,45,44,46], '小白菜':[20,21,20,22,23,22,24]
+    }
+  };
+  const $ = (id) => document.getElementById(id);
+  function money(n) { return `NT$ ${n}`; }
+  function renderChart(values) {
+    const svg = $('chart'); const w=760, h=210, pad=28;
+    const min=Math.min(...values)-2, max=Math.max(...values)+2;
+    const x=i => pad + i*(w-pad*2)/(values.length-1);
+    const y=v => h-pad - (v-min)*(h-pad*2)/(max-min || 1);
+    const points=values.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+    const dots=values.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#1d6b56"><title>${DATES[i]}：${v} 元</title></circle>`).join('');
+    const labels=DATES.map((d,i)=>`<text x="${x(i)}" y="198" text-anchor="middle" font-size="12" fill="#687386">${d}</text>`).join('');
+    svg.innerHTML=`<line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="#dfe5ec"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="#dfe5ec"/><polyline points="${points}" fill="none" stroke="#1d6b56" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels}`;
+  }
+  function render() {
+    const market=$('market').value, item=$('item').value, values=DATA[market][item];
+    const first=values[0], last=values[values.length-1], avg=Math.round(values.reduce((a,b)=>a+b,0)/values.length*10)/10, diff=last-first;
+    $('report-title').textContent=`${market}／${item}`;
+    $('latest').textContent=money(last); $('average').textContent=money(avg);
+    const change=$('change'); change.textContent=`${diff >= 0 ? '+' : ''}${diff} 元`; change.className=diff >= 0 ? 'up' : 'down';
+    $('status').textContent=`已產生 ${values.length} 筆 mock 資料`;
+    $('rows').innerHTML=values.map((v,i)=>{ const delta=i===0 ? '—' : `${v-values[i-1]>=0?'+':''}${v-values[i-1]} 元`; return `<tr><td>${DATES[i]}</td><td>${item}</td><td>${money(v)}</td><td class="${i===0?'':(v-values[i-1]>=0?'up':'down')}">${delta}</td></tr>`; }).join('');
+    renderChart(values);
+  }
+  $('generate').addEventListener('click', render); $('market').addEventListener('change', render); $('item').addEventListener('change', render); render();
+</script>
+</body>
+</html>
