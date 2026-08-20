@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>序間室內｜Concept Demo</title>
+  <style>
+    :root{--ink:#1e2723;--muted:#6e7872;--line:#e3e8e3;--paper:#fbfcfa;--sage:#537363;--deep:#20382e;--sand:#ece5d8;--accent:#bd7655}
+    *{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
+    .wrap{max-width:1120px;margin:auto;padding:22px 20px 58px}.demo{font-size:12px;letter-spacing:.12em;color:var(--sage);font-weight:800}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:8px 0 28px}.brand{font-size:22px;font-weight:800;letter-spacing:.08em}.navlinks{display:flex;gap:20px;color:var(--muted);font-size:14px}.navlinks a{color:inherit;text-decoration:none}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:stretch}.hero-copy{background:var(--deep);color:#fff;border-radius:26px;padding:42px 40px;display:flex;flex-direction:column;justify-content:center;min-height:390px}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.12;margin:16px 0}.hero p{color:#dce7df;line-height:1.85;margin:0;max-width:520px}.hero .cta{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}.btn-primary{background:#f4e9d7;color:var(--deep)}.btn-ghost{border:1px solid #ffffff66;color:#fff;background:transparent}
+    .hero-photo{border-radius:26px;min-height:390px;background:linear-gradient(145deg,#d6c4a8 0 42%,#a3b8a7 42% 72%,#e8ded0 72%);position:relative;overflow:hidden}.hero-photo:before{content:"";position:absolute;width:72%;height:62%;right:-10%;bottom:-8%;background:#f5efe5;border-radius:50% 0 0 0;transform:rotate(-13deg)}.hero-photo:after{content:"暖光・留白・日常";position:absolute;left:24px;bottom:24px;background:#ffffffcf;color:var(--deep);padding:10px 14px;border-radius:10px;font-weight:700;font-size:14px}
+    section{margin-top:58px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:20px}.section-head h2{margin:0;font-size:28px}.section-head p{margin:0;color:var(--muted);line-height:1.6;max-width:560px;font-size:14px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.card-art{height:150px}.art-a{background:linear-gradient(135deg,#c9b69b,#e8dfd0 55%,#a3b69f)}.art-b{background:linear-gradient(135deg,#d8d0c0,#b6c7bc 58%,#708a78)}.art-c{background:linear-gradient(135deg,#a28d76,#ded2bf 58%,#d3b27f)}.card-body{padding:18px}.tag{display:inline-block;color:var(--sage);font-size:12px;font-weight:800;letter-spacing:.05em}.card h3{margin:8px 0 7px;font-size:20px}.card p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.step{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff}.step b{display:grid;place-items:center;width:34px;height:34px;background:var(--sand);border-radius:50%;color:var(--deep)}.step h3{margin:15px 0 8px}.step p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}
+    .contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:24px;align-items:start;background:#f0f2ed;border-radius:24px;padding:28px}.contact h2{margin:0 0 10px;font-size:28px}.contact p{margin:0;color:var(--muted);line-height:1.8}.form{display:grid;gap:12px;background:#fff;border-radius:18px;padding:20px}.form label{display:grid;gap:7px;color:var(--muted);font-size:13px;font-weight:700}.form input,.form textarea,.form select{width:100%;border:1px solid #d6ded8;border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);background:#fff}.form textarea{min-height:105px;resize:vertical}.form button{background:var(--sage);color:#fff;border:0;border-radius:10px;padding:12px;font-weight:800;font-size:15px;cursor:pointer}.status{min-height:20px;color:var(--sage);font-size:13px}
+    footer{margin-top:30px;color:var(--muted);font-size:12px;line-height:1.7;border-top:1px solid var(--line);padding-top:18px}
+    @media(max-width:780px){.hero,.contact{grid-template-columns:1fr}.hero-copy,.hero-photo{min-height:320px}.cards,.steps{grid-template-columns:1fr}.navlinks{gap:10px}.wrap{padding-left:14px;padding-right:14px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="demo">CONCEPT DEMO／概念樣品／非正式系統</div>
+    <nav><div class="brand">序間室內</div><div class="navlinks"><a href="#projects">作品案例</a><a href="#process">合作流程</a><a href="#contact">預約諮詢</a></div></nav>
+    <section class="hero" aria-label="網站首頁">
+      <div class="hero-copy">
+        <div class="demo" style="color:#c4d8ca">INTERIOR DESIGN STUDIO</div>
+        <h1>把生活，整理成喜歡的樣子。</h1>
+        <p>以收納、光線與材質為起點，整理每個家庭真正會使用的空間。這是一頁式室內裝潢公司網站示意，使用合成案例與假資料呈現內容瀏覽及詢問流程。</p>
+        <div class="cta"><a class="btn btn-primary" href="#projects">查看案例</a><a class="btn btn-ghost" href="#contact">留下需求</a></div>
+      </div>
+      <div class="hero-photo" role="img" aria-label="室內空間概念視覺"></div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head"><h2>近期案例</h2><p>先用清楚的案例分類讓訪客快速找到喜歡的風格，再把詢問入口放在閱讀路徑上。</p></div>
+      <div class="cards">
+        <article class="card"><div class="card-art art-a"></div><div class="card-body"><span class="tag">老屋整理</span><h3>日光留在客廳</h3><p>保留老屋比例，重新安排收納與採光，讓日常動線更自然。</p></div></article>
+        <article class="card"><div class="card-art art-b"></div><div class="card-body"><span class="tag">小宅規劃</span><h3>一個人的安靜基地</h3><p>用可變家具與連續材質放大空間感，收下工作與休息的切換。</p></div></article>
+        <article class="card"><div class="card-art art-c"></div><div class="card-body"><span class="tag">親子住宅</span><h3>一起長大的家</h3><p>從玄關、餐桌到臥室，預留物品成長與家庭互動的彈性。</p></div></article>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-head"><h2>合作流程</h2><p>把第一次接觸變成容易理解的三個步驟，讓訪客知道留下資料後會發生什麼。</p></div>
+      <div class="steps"><div class="step"><b>01</b><h3>說說生活需求</h3><p>從居住成員、空間困擾與喜歡的氛圍開始。</p></div><div class="step"><b>02</b><h3>確認方向</h3><p>整理平面、收納、材質與預算方向，確認可行範圍。</p></div><div class="step"><b>03</b><h3>逐步完成</h3><p>依階段確認設計與工程內容，讓每個決定都有依據。</p></div></div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div><h2>想聊聊你的空間？</h2><p>填寫一個簡短需求，示範版會在瀏覽器本機保存一筆詢問並顯示確認狀態。正式合作後可再接上真實表單、通知與後台。</p></div>
+      <form class="form" id="inquiry-form">
+        <label>稱呼<input id="name" required placeholder="例如：林小姐"></label>
+        <label>空間類型<select id="space"><option>住宅</option><option>老屋</option><option>店面</option><option>辦公室</option></select></label>
+        <label>目前最想改善的地方<textarea id="note" required placeholder="例如：收納不足、採光不夠……"></textarea></label>
+        <button type="submit">送出概念詢問</button><div class="status" id="status" aria-live="polite"></div>
+      </form>
+    </section>
+    <footer>此 Concept Demo 使用合成案例、CSS 視覺與 localStorage 模擬表單流程，未連接正式 API、資料庫、登入、通知或業主素材。正式版本的頁面範圍、內容管理、網域主機與表單通知會於合作後確認。</footer>
+  </main>
+  <script>
+    const form=document.getElementById('inquiry-form'),statusEl=document.getElementById('status');
+    form.addEventListener('submit',function(event){event.preventDefault();const inquiry={name:document.getElementById('name').value.trim(),space:document.getElementById('space').value,note:document.getElementById('note').value.trim(),savedAt:new Date().toISOString()};localStorage.setItem('conceptInquiry',JSON.stringify(inquiry));statusEl.textContent='已在本機保存概念詢問（mock），正式版本可接上通知與後台。';form.reset();});
+  </script>
+</body>
+</html>
