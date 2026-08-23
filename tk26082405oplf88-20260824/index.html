@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="福美 Concept Demo：簡易形象網站首頁、相片與聯絡資訊展示。">
+  <title>福美｜Concept Demo</title>
+  <style>
+    :root{--ink:#24312d;--muted:#6c7872;--cream:#f7f3ec;--paper:#fffdf9;--sage:#b8c9bd;--deep:#466357;--accent:#d99367;--line:#e6e0d6;}
+    *{box-sizing:border-box} body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.7}
+    a{color:inherit}.wrap{max-width:1080px;margin:auto;padding:0 24px}.demo-bar{background:#263b34;color:#fff;text-align:center;font-size:13px;letter-spacing:.04em;padding:8px 16px}.nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.brand{font-size:22px;font-weight:800;letter-spacing:.16em}.nav-note{font-size:13px;color:var(--muted)}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center;padding:42px 0 72px}.eyebrow{color:var(--deep);font-size:13px;font-weight:700;letter-spacing:.16em}.hero h1{font-size:clamp(38px,6vw,72px);line-height:1.08;margin:14px 0 20px;letter-spacing:.04em}.hero p{font-size:18px;color:#59665f;max-width:520px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.button{border:0;border-radius:999px;padding:12px 20px;font:inherit;cursor:pointer;transition:.2s}.button.primary{background:var(--deep);color:white}.button.secondary{background:transparent;color:var(--deep);border:1px solid #98aea1}.button:hover{transform:translateY(-2px)}
+    .hero-art{min-height:390px;border-radius:32px;background:linear-gradient(145deg,#dbe6dd,#a9c2b2);position:relative;overflow:hidden;box-shadow:0 18px 50px #8b9f9238}.hero-art:before,.hero-art:after{content:"";position:absolute;border-radius:50%;background:#f7ead9aa}.hero-art:before{width:250px;height:250px;right:-40px;top:-60px}.hero-art:after{width:180px;height:180px;left:-55px;bottom:-40px}.art-card{position:absolute;inset:52px 44px;background:var(--paper);border-radius:22px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 30px #50645932}.art-tag{font-size:12px;color:var(--muted);letter-spacing:.08em}.art-title{font-size:34px;font-weight:800;letter-spacing:.1em}.art-photo{height:130px;border-radius:15px;background:linear-gradient(135deg,#dfb28e,#f0d8bd 42%,#94ae9b 43%,#c6d9c6);display:grid;place-items:center;color:#fff;font-weight:700;letter-spacing:.1em}
+    section{padding:62px 0}.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:26px}.section-head h2{font-size:30px;margin:0}.section-head p{margin:0;color:var(--muted);font-size:14px}.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.photo{min-height:210px;border-radius:20px;padding:20px;display:flex;align-items:end;color:#fff;font-weight:700;position:relative;overflow:hidden}.photo span{position:relative;z-index:1}.photo:after{content:"合成相片示意";position:absolute;top:16px;right:16px;font-size:11px;opacity:.8}.photo.one{background:linear-gradient(135deg,#8eaa9a,#d7aa86)}.photo.two{background:linear-gradient(135deg,#6d8d87,#e5cfaa)}.photo.three{background:linear-gradient(135deg,#c78f72,#6c877c)}
+    .info{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px}.card h3{margin:0 0 8px;font-size:20px}.card p{margin:0;color:var(--muted)}.contact{display:flex;align-items:center;justify-content:space-between;gap:20px}.contact-box{margin-top:18px;padding:16px;border-radius:14px;background:#eef3ee;color:var(--deep);display:none}.contact-box.show{display:block}.small{font-size:13px;color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:28px 0 42px;color:var(--muted);font-size:13px}.pill{display:inline-block;border:1px solid #b8c9bd;border-radius:999px;padding:3px 10px;margin-left:6px;color:var(--deep);font-size:11px}
+    @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:20px}.hero-art{min-height:300px}.gallery,.info{grid-template-columns:1fr}.nav-note{display:none}.section-head{display:block}.section-head p{margin-top:7px}.contact{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="demo-bar">Concept Demo／概念樣品／非正式系統　·　本頁只使用合成資料</div>
+  <header class="wrap nav"><div class="brand">福美</div><div class="nav-note">簡單、清楚、方便找到</div></header>
+  <main>
+    <section class="wrap hero">
+      <div>
+        <div class="eyebrow">FUMEI · SIMPLE WEB PRESENCE</div>
+        <h1>讓人搜尋得到，<br>也看得懂。</h1>
+        <p>這是一個簡易形象網站的概念版本，示範首頁、相片展示與聯絡資訊的閱讀流程。正式合作時可換成店家提供的照片、文字與實際聯絡資料。</p>
+        <div class="actions"><button class="button primary" id="contactBtn">查看聯絡資訊</button><a class="button secondary" href="#gallery">瀏覽相片</a></div>
+        <div class="contact-box" id="contactBox">聯絡資訊示意：正式版可放入店家確認後的電話、地址與營業時間。</div>
+      </div>
+      <div class="hero-art" aria-label="合成相片示意"><div class="art-card"><div class="art-tag">CONCEPT IMAGE · 01</div><div class="art-photo">福美　相片示意</div><div class="art-title">看見你的日常</div></div></div>
+    </section>
+    <section class="wrap" id="gallery"><div class="section-head"><h2>相片展示</h2><p>手機與桌機都能快速瀏覽的簡單版型</p></div><div class="gallery"><div class="photo one"><span>店面／產品相片</span></div><div class="photo two"><span>服務內容相片</span></div><div class="photo three"><span>品牌故事相片</span></div></div></section>
+    <section class="wrap"><div class="info"><div class="card"><h3>關於福美</h3><p>正式版可放入店家簡介、主要服務與讓訪客快速理解的重點內容。</p></div><div class="card"><h3>上線前可替換</h3><p>照片、文字、網域與聯絡資料都能依確認後的內容更新；目前沒有串接正式主機或第三方服務。</p></div></div></section>
+  </main>
+  <footer class="wrap">福美 Concept Demo <span class="pill">合成資料</span> <span class="pill">非正式系統</span><br>本頁用於提案概念展示，正式合作後再依確認內容製作與部署。</footer>
+  <script>
+    const btn=document.getElementById('contactBtn'); const box=document.getElementById('contactBox');
+    btn.addEventListener('click',()=>{box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'收起聯絡資訊':'查看聯絡資訊';});
+  </script>
+</body>
+</html>
