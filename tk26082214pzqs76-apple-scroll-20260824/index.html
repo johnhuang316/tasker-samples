@@ -1,0 +1,1265 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07090a">
+  <meta name="description" content="ORBIT / ONE — 原創程序式 Canvas 捲動敘事概念展示。">
+  <title>ORBIT / ONE — Scroll-driven Concept Demo</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2f3ee;
+      --muted: #9a9d98;
+      --line: rgba(255, 255, 255, 0.14);
+      --stage: #07090a;
+      --paper: #e7e8e2;
+      --cyan: #a7eeef;
+      --amber: #e7bc7d;
+      --banner-h: 38px;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #07090a;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: clip;
+      background: #07090a;
+      color: var(--ink);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 120;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: #0c0d0e;
+      font-weight: 700;
+      text-decoration: none;
+      transform: translateY(-160%);
+      transition: transform 180ms ease;
+    }
+
+    .skip-link:focus-visible {
+      transform: translateY(0);
+      outline: 3px solid #77dde0;
+      outline-offset: 3px;
+    }
+
+    .concept-banner {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      display: grid;
+      min-height: var(--banner-h);
+      place-items: center;
+      padding: 7px 48px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(7, 9, 10, 0.78);
+      color: rgba(246, 247, 242, 0.74);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.14em;
+      line-height: 1.4;
+      text-align: center;
+      text-transform: uppercase;
+      backdrop-filter: blur(18px) saturate(130%);
+      -webkit-backdrop-filter: blur(18px) saturate(130%);
+    }
+
+    .story {
+      position: relative;
+      height: 500vh;
+      height: 500svh;
+      background: #07090a;
+    }
+
+    .stage {
+      position: relative;
+      isolation: isolate;
+      height: 100vh;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden;
+      background: var(--stage);
+    }
+
+    .stage::before {
+      position: absolute;
+      z-index: -2;
+      inset: -16%;
+      background:
+        radial-gradient(circle at 49% 46%, rgba(112, 178, 184, 0.055), transparent 24%),
+        radial-gradient(circle at 72% 20%, rgba(208, 164, 103, 0.026), transparent 30%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .stage::after {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      opacity: 0.13;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.26'/%3E%3C/svg%3E");
+      content: "";
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .canvas-shell {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #product-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .loading-state {
+      position: absolute;
+      z-index: 20;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      width: min(260px, 68vw);
+      gap: 12px;
+      color: rgba(242, 243, 238, 0.66);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-align: center;
+      transform: translate(-50%, -50%);
+      transition: opacity 350ms ease, visibility 350ms ease;
+    }
+
+    .loading-state::after {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(167, 238, 239, 0.76), transparent);
+      content: "";
+      transform: scaleX(var(--load-progress, 0.08));
+      transition: transform 100ms linear;
+    }
+
+    .loading-state.is-ready {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .copy-layer {
+      position: absolute;
+      z-index: 4;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .beat {
+      position: absolute;
+      width: min(440px, 38vw);
+      margin: 0;
+      will-change: opacity, transform;
+    }
+
+    .beat__eyebrow {
+      display: block;
+      margin-bottom: 13px;
+      color: rgba(242, 243, 238, 0.54);
+      font-size: clamp(9px, 0.75vw, 11px);
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .beat h1,
+    .beat h2,
+    .beat p {
+      margin: 0;
+    }
+
+    .opening {
+      top: clamp(116px, 16vh, 168px);
+      left: clamp(28px, 7vw, 112px);
+      width: min(650px, 52vw);
+    }
+
+    .opening h1 {
+      font-family: "Arial Narrow", Inter, ui-sans-serif, sans-serif;
+      font-size: clamp(42px, 7.7vw, 118px);
+      font-weight: 480;
+      letter-spacing: -0.065em;
+      line-height: 0.82;
+    }
+
+    .opening p {
+      margin-top: 28px;
+      color: rgba(242, 243, 238, 0.74);
+      font-family: ui-serif, "Noto Serif TC", serif;
+      font-size: clamp(19px, 2vw, 30px);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      line-height: 1.45;
+    }
+
+    .beat--one {
+      top: 25%;
+      right: clamp(28px, 7vw, 112px);
+      text-align: right;
+    }
+
+    .beat--two {
+      bottom: 13%;
+      left: clamp(28px, 7vw, 112px);
+    }
+
+    .beat--three {
+      right: clamp(28px, 7vw, 112px);
+      bottom: 13%;
+      text-align: right;
+    }
+
+    .beat--one,
+    .beat--two,
+    .beat--three {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .beat h2 {
+      font-size: clamp(28px, 3.2vw, 52px);
+      font-weight: 480;
+      letter-spacing: -0.045em;
+      line-height: 0.98;
+    }
+
+    .beat > p {
+      max-width: 380px;
+      margin-top: 17px;
+      color: rgba(242, 243, 238, 0.67);
+      font-size: clamp(14px, 1.15vw, 17px);
+      letter-spacing: 0.045em;
+      line-height: 1.75;
+    }
+
+    .beat--one > p,
+    .beat--three > p {
+      margin-left: auto;
+    }
+
+    .stage-meta {
+      position: absolute;
+      z-index: 10;
+      right: clamp(20px, 3.4vw, 56px);
+      bottom: clamp(20px, 3.4vw, 46px);
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      color: rgba(242, 243, 238, 0.52);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.13em;
+      line-height: 1;
+    }
+
+    .stage-meta::before {
+      width: 44px;
+      height: 1px;
+      background: rgba(242, 243, 238, 0.32);
+      content: "";
+    }
+
+    .scroll-cue {
+      position: absolute;
+      z-index: 10;
+      bottom: clamp(20px, 3.4vw, 46px);
+      left: clamp(20px, 3.4vw, 56px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(242, 243, 238, 0.42);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue::before {
+      width: 6px;
+      height: 6px;
+      border: 1px solid rgba(167, 238, 239, 0.75);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 18px rgba(167, 238, 239, 0.6);
+    }
+
+    .capabilities {
+      position: relative;
+      z-index: 12;
+      display: grid;
+      min-height: 100vh;
+      min-height: 100svh;
+      align-content: center;
+      padding: clamp(92px, 12vw, 172px) clamp(24px, 7vw, 112px);
+      overflow: hidden;
+      background: var(--paper);
+      color: #111313;
+    }
+
+    .capabilities::before {
+      position: absolute;
+      top: -28vw;
+      right: -16vw;
+      width: 70vw;
+      height: 70vw;
+      border: 1px solid rgba(17, 19, 19, 0.08);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .capabilities__header {
+      position: relative;
+      max-width: 1040px;
+    }
+
+    .capabilities__index {
+      display: block;
+      margin-bottom: 24px;
+      color: rgba(17, 19, 19, 0.5);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .capabilities h2 {
+      max-width: 920px;
+      margin: 0;
+      font-family: ui-serif, "Noto Serif TC", serif;
+      font-size: clamp(36px, 6vw, 90px);
+      font-weight: 450;
+      letter-spacing: -0.045em;
+      line-height: 1.12;
+    }
+
+    .capability-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 1240px;
+      margin-top: clamp(64px, 8vw, 112px);
+      border-top: 1px solid rgba(17, 19, 19, 0.24);
+    }
+
+    .capability-card {
+      min-height: 180px;
+      padding: 28px 28px 28px 0;
+    }
+
+    .capability-card + .capability-card {
+      padding-left: 28px;
+      border-left: 1px solid rgba(17, 19, 19, 0.16);
+    }
+
+    .capability-card__number {
+      display: block;
+      margin-bottom: 44px;
+      color: rgba(17, 19, 19, 0.42);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+    }
+
+    .capability-card h3,
+    .capability-card p {
+      margin: 0;
+    }
+
+    .capability-card h3 {
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 580;
+      letter-spacing: -0.03em;
+    }
+
+    .capability-card p {
+      margin-top: 10px;
+      color: rgba(17, 19, 19, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .replay-link {
+      position: relative;
+      justify-self: start;
+      margin-top: clamp(36px, 5vw, 68px);
+      padding: 13px 20px;
+      border: 1px solid rgba(17, 19, 19, 0.4);
+      border-radius: 999px;
+      color: #111313;
+      font-size: 12px;
+      font-weight: 720;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .replay-link:hover {
+      background: #111313;
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    .replay-link:focus-visible {
+      outline: 3px solid #0e7f86;
+      outline-offset: 4px;
+    }
+
+    .native-fallback .stage {
+      position: sticky;
+      top: 0;
+    }
+
+    @media (max-width: 720px) {
+      :root {
+        --banner-h: 46px;
+      }
+
+      .concept-banner {
+        min-height: var(--banner-h);
+        padding-inline: 24px;
+        font-size: 9px;
+        letter-spacing: 0.09em;
+      }
+
+      .stage {
+        min-height: 560px;
+      }
+
+      .beat {
+        width: calc(100% - 48px);
+      }
+
+      .opening {
+        top: calc(var(--banner-h) + 54px);
+        left: 24px;
+        width: calc(100% - 48px);
+      }
+
+      .opening h1 {
+        font-size: clamp(45px, 16.4vw, 74px);
+      }
+
+      .opening p {
+        margin-top: 16px;
+        font-size: 18px;
+      }
+
+      .beat--one,
+      .beat--two,
+      .beat--three {
+        top: auto;
+        right: auto;
+        bottom: 12.5%;
+        left: 24px;
+        text-align: left;
+      }
+
+      .beat h2 {
+        font-size: clamp(28px, 9.5vw, 42px);
+      }
+
+      .beat > p,
+      .beat--one > p,
+      .beat--three > p {
+        max-width: 330px;
+        margin-top: 12px;
+        margin-left: 0;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .stage-meta {
+        right: 20px;
+        bottom: 24px;
+      }
+
+      .stage-meta::before {
+        width: 22px;
+      }
+
+      .scroll-cue {
+        bottom: 24px;
+        left: 20px;
+      }
+
+      .scroll-cue span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      .capabilities {
+        padding-inline: 24px;
+      }
+
+      .capability-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .capability-card,
+      .capability-card + .capability-card {
+        min-height: auto;
+        padding: 24px 0 30px;
+        border-left: 0;
+        border-bottom: 1px solid rgba(17, 19, 19, 0.16);
+      }
+
+      .capability-card__number {
+        margin-bottom: 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .story {
+        height: auto;
+        min-height: auto;
+      }
+
+      .stage,
+      .native-fallback .stage {
+        position: relative;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+        padding-top: var(--banner-h);
+      }
+
+      .canvas-shell {
+        position: relative;
+        inset: auto;
+        height: min(68vh, 680px);
+        min-height: 420px;
+      }
+
+      .copy-layer {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 54px 8vw;
+        padding: 44px clamp(24px, 7vw, 112px) 92px;
+      }
+
+      .beat,
+      .opening,
+      .beat--one,
+      .beat--two,
+      .beat--three {
+        position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        visibility: visible !important;
+        width: auto;
+        opacity: 1 !important;
+        text-align: left;
+        transform: none !important;
+      }
+
+      .opening {
+        grid-column: 1 / -1;
+      }
+
+      .opening h1 {
+        font-size: clamp(48px, 9vw, 112px);
+      }
+
+      .beat--one > p,
+      .beat--three > p {
+        margin-left: 0;
+      }
+
+      .stage-meta,
+      .scroll-cue {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+      .canvas-shell {
+        height: 54vh;
+        min-height: 360px;
+      }
+
+      .copy-layer {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        padding-top: 34px;
+      }
+
+      .opening {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#capabilities">跳至技術摘要</a>
+
+  <aside class="concept-banner" aria-label="作品性質說明">
+    Concept Demo｜自行製作合成視覺｜非正式客戶作品
+  </aside>
+
+  <main>
+    <section class="story" id="story" aria-labelledby="hero-title">
+      <div class="stage">
+        <div class="canvas-shell" aria-hidden="false">
+          <canvas
+            id="product-canvas"
+            aria-label="ORBIT / ONE 原創程序式音響雕塑：深色玻璃核心與兩道金屬橢圓弧隨捲動旋轉、縮放並掃過光線。"
+          >ORBIT / ONE 原創程序式音響雕塑動畫。</canvas>
+        </div>
+
+        <div class="loading-state" id="loading-state" role="status" aria-live="polite">
+          <span id="loading-copy">BUILDING MOTION FRAMES · 00%</span>
+        </div>
+
+        <div class="copy-layer">
+          <header class="beat opening" id="opening-copy">
+            <span class="beat__eyebrow">FORM / FREQUENCY / 001</span>
+            <h1 id="hero-title">ORBIT / ONE</h1>
+            <p>聲音，開始有了形狀。</p>
+          </header>
+
+          <article class="beat beat--one" id="beat-one">
+            <span class="beat__eyebrow">01 — MATERIAL</span>
+            <h2>SCULPTED SILENCE</h2>
+            <p>留白，讓每一個細節更清楚。</p>
+          </article>
+
+          <article class="beat beat--two" id="beat-two">
+            <span class="beat__eyebrow">02 — MOTION</span>
+            <h2>48 MOTION FRAMES</h2>
+            <p>滾動控制畫面，節奏跟著使用者前進。</p>
+          </article>
+
+          <article class="beat beat--three" id="beat-three">
+            <span class="beat__eyebrow">03 — COMPOSITION</span>
+            <h2>DESKTOP → MOBILE</h2>
+            <p>同一段敘事，在不同螢幕保留重點。</p>
+          </article>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true"><span>Scroll to shape sound</span></div>
+        <div class="stage-meta" id="frame-indicator" aria-hidden="true">FRAME 01 / 48</div>
+      </div>
+    </section>
+
+    <section class="capabilities" id="capabilities" aria-labelledby="capabilities-title">
+      <header class="capabilities__header">
+        <span class="capabilities__index">04 — CAPABILITIES / CONCEPT SAMPLE</span>
+        <h2 id="capabilities-title">為品牌做一段會被記住的開場。</h2>
+      </header>
+
+      <div class="capability-grid">
+        <article class="capability-card">
+          <span class="capability-card__number">01 / 03</span>
+          <h3>Canvas Sequence</h3>
+          <p>48 procedural frames, scroll-synced</p>
+        </article>
+        <article class="capability-card">
+          <span class="capability-card__number">02 / 03</span>
+          <h3>Responsive Narrative</h3>
+          <p>desktop/mobile composition</p>
+        </article>
+        <article class="capability-card">
+          <span class="capability-card__number">03 / 03</span>
+          <h3>Static Deploy</h3>
+          <p>no backend or client data</p>
+        </article>
+      </div>
+
+      <a class="replay-link" href="#story">Replay sequence ↑</a>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const FRAME_COUNT = 48;
+      const html = document.documentElement;
+      const story = document.getElementById("story");
+      const stage = document.querySelector(".stage");
+      const canvas = document.getElementById("product-canvas");
+      const context = canvas.getContext("2d", { alpha: true, desynchronized: true });
+      const frameIndicator = document.getElementById("frame-indicator");
+      const loadingState = document.getElementById("loading-state");
+      const loadingCopy = document.getElementById("loading-copy");
+      const openingCopy = document.getElementById("opening-copy");
+      const beatOne = document.getElementById("beat-one");
+      const beatTwo = document.getElementById("beat-two");
+      const beatThree = document.getElementById("beat-three");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      const frames = [];
+      const state = {
+        currentFrame: 0,
+        targetFrame: 0,
+        cssWidth: 0,
+        cssHeight: 0,
+        dpr: 1,
+        rafId: 0,
+        resizeTimer: 0,
+        timeline: null,
+        fallbackTicking: false,
+      };
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const lerp = (start, end, amount) => start + (end - start) * amount;
+      const smooth = (start, end, value) => {
+        const amount = clamp((value - start) / (end - start), 0, 1);
+        return amount * amount * (3 - 2 * amount);
+      };
+
+      const api = {
+        frameCount: FRAME_COUNT,
+        currentFrame: 0,
+        renderFrame(index) {
+          return requestFrame(clamp(Math.round(Number(index) || 0), 0, FRAME_COUNT - 1));
+        },
+        setProgress(progress) {
+          const safeProgress = clamp(Number(progress) || 0, 0, 1);
+          const index = Math.round(safeProgress * (FRAME_COUNT - 1));
+          requestFrame(index);
+          if (!state.timeline && !reducedMotion.matches) applyNarrativeProgress(safeProgress);
+          return index;
+        },
+      };
+      window.__orbitDemo = api;
+
+      function metallicGradient(ctx, radius, coolBias = 0) {
+        const gradient = ctx.createLinearGradient(-radius, -radius * 0.15, radius, radius * 0.1);
+        gradient.addColorStop(0, coolBias ? "#31464d" : "#443d36");
+        gradient.addColorStop(0.15, "#8c9492");
+        gradient.addColorStop(0.32, coolBias ? "#d5fbf8" : "#ead9bf");
+        gradient.addColorStop(0.45, "#596267");
+        gradient.addColorStop(0.64, "#f1eee4");
+        gradient.addColorStop(0.81, coolBias ? "#4b777c" : "#816a51");
+        gradient.addColorStop(1, "#242b2e");
+        return gradient;
+      }
+
+      function traceCore(ctx, radius, progress) {
+        const breathe = Math.sin(progress * Math.PI * 2) * radius * 0.018;
+        ctx.beginPath();
+        ctx.moveTo(-radius * 0.06, -radius * 1.08);
+        ctx.bezierCurveTo(
+          radius * 0.58 + breathe,
+          -radius * 1.02,
+          radius * 0.83,
+          -radius * 0.37,
+          radius * 0.68,
+          radius * 0.35
+        );
+        ctx.bezierCurveTo(
+          radius * 0.56,
+          radius * 0.92,
+          radius * 0.13,
+          radius * 1.14,
+          -radius * 0.36,
+          radius * 0.92
+        );
+        ctx.bezierCurveTo(
+          -radius * 0.82,
+          radius * 0.7,
+          -radius * 0.84,
+          -radius * 0.04,
+          -radius * 0.62,
+          -radius * 0.54
+        );
+        ctx.bezierCurveTo(
+          -radius * 0.47,
+          -radius * 0.88,
+          -radius * 0.27,
+          -radius * 1.05,
+          -radius * 0.06,
+          -radius * 1.08
+        );
+        ctx.closePath();
+      }
+
+      function strokeOrbit(ctx, radiusX, radiusY, rotation, start, end, width, alpha, coolBias) {
+        ctx.save();
+        ctx.rotate(rotation);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, radiusX, radiusY, 0, start, end);
+        ctx.lineCap = "round";
+        ctx.lineWidth = width;
+        ctx.strokeStyle = metallicGradient(ctx, radiusX, coolBias);
+        ctx.globalAlpha = alpha;
+        ctx.shadowColor = coolBias ? "rgba(143, 234, 235, .34)" : "rgba(231, 188, 125, .26)";
+        ctx.shadowBlur = width * 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawProceduralFrame(frameCanvas, index) {
+        const size = frameCanvas.width;
+        const ctx = frameCanvas.getContext("2d", { alpha: true });
+        const progress = index / (FRAME_COUNT - 1);
+        const entrance = smooth(0, 0.2, progress);
+        const resolve = smooth(0.62, 1, progress);
+        const center = size / 2;
+        const objectScale = lerp(0.46, 0.91, entrance) * lerp(1, 1.07, resolve);
+        const verticalEntrance = lerp(size * 0.18, 0, entrance);
+        const rotationA = lerp(-0.9, 0.74, progress);
+        const rotationB = lerp(0.76, -0.7, progress) + Math.sin(progress * Math.PI) * 0.22;
+        const reveal = 0.22 + smooth(0.02, 0.26, progress) * 0.78;
+
+        ctx.clearRect(0, 0, size, size);
+
+        const atmosphere = ctx.createRadialGradient(
+          center + lerp(-size * 0.2, size * 0.18, progress),
+          center - size * 0.06,
+          size * 0.015,
+          center,
+          center,
+          size * 0.48
+        );
+        atmosphere.addColorStop(0, `rgba(148, 235, 236, ${0.13 + progress * 0.09})`);
+        atmosphere.addColorStop(0.32, `rgba(79, 119, 124, ${0.08 + progress * 0.04})`);
+        atmosphere.addColorStop(0.68, "rgba(28, 33, 36, .025)");
+        atmosphere.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = atmosphere;
+        ctx.fillRect(0, 0, size, size);
+
+        ctx.save();
+        ctx.translate(center, center + verticalEntrance);
+        ctx.scale(objectScale, objectScale);
+        ctx.globalAlpha = lerp(0.62, 1, entrance);
+
+        const clipTop = lerp(size * 0.17, -size * 0.54, reveal);
+        ctx.beginPath();
+        ctx.rect(-size, clipTop, size * 2, size * 1.4 - clipTop);
+        ctx.clip();
+
+        const shadow = ctx.createRadialGradient(0, size * 0.29, 0, 0, size * 0.29, size * 0.34);
+        shadow.addColorStop(0, "rgba(0, 0, 0, .58)");
+        shadow.addColorStop(0.52, "rgba(0, 0, 0, .2)");
+        shadow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.save();
+        ctx.scale(1, 0.2);
+        ctx.fillStyle = shadow;
+        ctx.beginPath();
+        ctx.arc(0, size * 1.47, size * 0.34, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        strokeOrbit(ctx, size * 0.35, size * 0.145, rotationA, Math.PI * 0.94, Math.PI * 2.05, size * 0.024, 0.36, 0);
+        strokeOrbit(ctx, size * 0.245, size * 0.37, rotationB, Math.PI * 0.78, Math.PI * 1.86, size * 0.02, 0.34, 1);
+
+        const coreRadius = size * 0.215;
+        traceCore(ctx, coreRadius, progress);
+        const coreFill = ctx.createRadialGradient(
+          -coreRadius * 0.34,
+          -coreRadius * 0.52,
+          coreRadius * 0.03,
+          coreRadius * 0.04,
+          coreRadius * 0.08,
+          coreRadius * 1.25
+        );
+        coreFill.addColorStop(0, "#b5f6f3");
+        coreFill.addColorStop(0.07, "#52767a");
+        coreFill.addColorStop(0.27, "#1d292e");
+        coreFill.addColorStop(0.6, "#090d10");
+        coreFill.addColorStop(0.9, "#020405");
+        coreFill.addColorStop(1, "#12191c");
+        ctx.fillStyle = coreFill;
+        ctx.shadowColor = "rgba(92, 200, 205, .15)";
+        ctx.shadowBlur = size * 0.055;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.save();
+        traceCore(ctx, coreRadius, progress);
+        ctx.clip();
+
+        const sweepPosition = lerp(-coreRadius * 1.9, coreRadius * 1.9, smooth(0.12, 0.88, progress));
+        const sweep = ctx.createLinearGradient(
+          sweepPosition - coreRadius * 0.38,
+          0,
+          sweepPosition + coreRadius * 0.38,
+          0
+        );
+        sweep.addColorStop(0, "rgba(255, 255, 255, 0)");
+        sweep.addColorStop(0.46, "rgba(166, 244, 243, .02)");
+        sweep.addColorStop(0.52, `rgba(213, 255, 252, ${0.34 + Math.sin(progress * Math.PI) * 0.26})`);
+        sweep.addColorStop(0.59, "rgba(230, 194, 137, .08)");
+        sweep.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.globalCompositeOperation = "screen";
+        ctx.fillStyle = sweep;
+        ctx.fillRect(-coreRadius * 1.2, -coreRadius * 1.2, coreRadius * 2.4, coreRadius * 2.4);
+
+        const innerGlow = ctx.createRadialGradient(
+          coreRadius * 0.18,
+          coreRadius * 0.26,
+          0,
+          coreRadius * 0.18,
+          coreRadius * 0.26,
+          coreRadius * 0.7
+        );
+        innerGlow.addColorStop(0, `rgba(225, 183, 119, ${0.08 + resolve * 0.15})`);
+        innerGlow.addColorStop(0.5, "rgba(65, 91, 95, .03)");
+        innerGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = innerGlow;
+        ctx.fillRect(-coreRadius, -coreRadius, coreRadius * 2, coreRadius * 2);
+
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 0.17;
+        ctx.strokeStyle = "#c8eeeb";
+        ctx.lineWidth = Math.max(0.8, size * 0.0013);
+        for (let line = 0; line < 5; line += 1) {
+          ctx.beginPath();
+          ctx.ellipse(
+            -coreRadius * 0.05,
+            -coreRadius * 0.02,
+            coreRadius * (0.26 + line * 0.12),
+            coreRadius * (0.34 + line * 0.1),
+            progress * 0.25,
+            -1.05,
+            1.6
+          );
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        traceCore(ctx, coreRadius, progress);
+        ctx.lineWidth = size * 0.005;
+        const rim = ctx.createLinearGradient(-coreRadius, -coreRadius, coreRadius, coreRadius);
+        rim.addColorStop(0, "rgba(218, 255, 253, .72)");
+        rim.addColorStop(0.22, "rgba(123, 164, 168, .16)");
+        rim.addColorStop(0.7, "rgba(0, 0, 0, .62)");
+        rim.addColorStop(1, "rgba(218, 177, 116, .34)");
+        ctx.strokeStyle = rim;
+        ctx.globalAlpha = 0.78;
+        ctx.stroke();
+
+        strokeOrbit(ctx, size * 0.35, size * 0.145, rotationA, -0.02, Math.PI * 0.94, size * 0.026, 0.96, 0);
+        strokeOrbit(ctx, size * 0.245, size * 0.37, rotationB, -0.28, Math.PI * 0.8, size * 0.021, 0.92, 1);
+
+        const nodeAngle = lerp(-0.45, Math.PI * 1.42, progress);
+        ctx.save();
+        ctx.rotate(rotationA);
+        const nodeX = Math.cos(nodeAngle) * size * 0.35;
+        const nodeY = Math.sin(nodeAngle) * size * 0.145;
+        const nodeGlow = ctx.createRadialGradient(nodeX, nodeY, 0, nodeX, nodeY, size * 0.05);
+        nodeGlow.addColorStop(0, "rgba(235, 255, 251, .9)");
+        nodeGlow.addColorStop(0.18, "rgba(160, 238, 236, .5)");
+        nodeGlow.addColorStop(1, "rgba(125, 226, 228, 0)");
+        ctx.globalCompositeOperation = "screen";
+        ctx.fillStyle = nodeGlow;
+        ctx.beginPath();
+        ctx.arc(nodeX, nodeY, size * 0.05, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.restore();
+
+        const dustCount = 11;
+        for (let dust = 0; dust < dustCount; dust += 1) {
+          const seed = dust * 19.31 + index * 0.13;
+          const x = center + Math.sin(seed * 1.7) * size * (0.28 + (dust % 3) * 0.04);
+          const y = center + Math.cos(seed * 0.9) * size * 0.3;
+          const pulse = 0.18 + 0.2 * Math.sin(progress * Math.PI * 2 + dust);
+          ctx.fillStyle = `rgba(190, 235, 232, ${Math.max(0.04, pulse)})`;
+          ctx.beginPath();
+          ctx.arc(x, y, size * (dust % 4 === 0 ? 0.002 : 0.0012), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const cssWidth = Math.max(1, Math.round(rect.width));
+        const cssHeight = Math.max(1, Math.round(rect.height));
+        const desiredDpr = Math.min(window.devicePixelRatio || 1, 2);
+        const pixelBudget = 3000000;
+        const budgetDpr = Math.sqrt(pixelBudget / (cssWidth * cssHeight));
+        const dpr = Math.max(1, Math.min(desiredDpr, budgetDpr));
+
+        if (
+          state.cssWidth === cssWidth &&
+          state.cssHeight === cssHeight &&
+          Math.abs(state.dpr - dpr) < 0.01
+        ) return;
+
+        state.cssWidth = cssWidth;
+        state.cssHeight = cssHeight;
+        state.dpr = dpr;
+        canvas.width = Math.round(cssWidth * dpr);
+        canvas.height = Math.round(cssHeight * dpr);
+        drawFrame(state.currentFrame);
+      }
+
+      function drawFrame(index) {
+        if (!frames[index] || !state.cssWidth || !state.cssHeight) return;
+
+        const width = state.cssWidth;
+        const height = state.cssHeight;
+        const mobile = width <= 720;
+        const progress = index / (FRAME_COUNT - 1);
+        const source = frames[index];
+        const side = Math.min(
+          width * (mobile ? 1.22 : 0.76),
+          height * (mobile ? 0.72 : 0.88),
+          mobile ? 520 : 800
+        );
+        const centerX = width * (mobile ? 0.5 : lerp(0.52, 0.49, progress));
+        const centerY = height * (mobile ? 0.46 : 0.51);
+
+        context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        context.clearRect(0, 0, width, height);
+
+        const ambient = context.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          Math.max(side * 0.82, 1)
+        );
+        ambient.addColorStop(0, `rgba(91, 137, 141, ${0.045 + progress * 0.035})`);
+        ambient.addColorStop(0.55, "rgba(22, 29, 31, .018)");
+        ambient.addColorStop(1, "rgba(0, 0, 0, 0)");
+        context.fillStyle = ambient;
+        context.fillRect(0, 0, width, height);
+        context.drawImage(source, centerX - side / 2, centerY - side / 2, side, side);
+
+        const vignette = context.createRadialGradient(
+          width / 2,
+          height / 2,
+          Math.min(width, height) * 0.24,
+          width / 2,
+          height / 2,
+          Math.max(width, height) * 0.72
+        );
+        vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
+        vignette.addColorStop(1, "rgba(0, 0, 0, .18)");
+        context.fillStyle = vignette;
+        context.fillRect(0, 0, width, height);
+      }
+
+      function setFrameState(index) {
+        state.currentFrame = index;
+        api.currentFrame = index;
+        html.dataset.frameIndex = String(index);
+        frameIndicator.textContent = `FRAME ${String(index + 1).padStart(2, "0")} / ${FRAME_COUNT}`;
+      }
+
+      function requestFrame(index) {
+        state.targetFrame = index;
+        setFrameState(index);
+        if (state.rafId) return index;
+        state.rafId = window.requestAnimationFrame(() => {
+          state.rafId = 0;
+          drawFrame(state.targetFrame);
+        });
+        return index;
+      }
+
+      function setElementProgress(element, opacity, direction = 1) {
+        const safeOpacity = clamp(opacity, 0, 1);
+        element.style.visibility = safeOpacity > 0.002 ? "visible" : "hidden";
+        element.style.opacity = String(safeOpacity);
+        element.style.transform = `translate3d(0, ${(1 - safeOpacity) * 28 * direction}px, 0)`;
+      }
+
+      function applyNarrativeProgress(progress) {
+        setElementProgress(openingCopy, 1 - smooth(0.1, 0.2, progress), -1);
+        setElementProgress(beatOne, smooth(0.14, 0.22, progress) * (1 - smooth(0.34, 0.42, progress)));
+        setElementProgress(beatTwo, smooth(0.37, 0.46, progress) * (1 - smooth(0.61, 0.7, progress)));
+        setElementProgress(beatThree, smooth(0.65, 0.75, progress));
+
+        const colorStops = [
+          [7, 9, 10],
+          [13, 16, 18],
+          [10, 13, 16],
+          [15, 13, 12],
+        ];
+        const segment = clamp(progress * 3, 0, 2.999);
+        const from = colorStops[Math.floor(segment)];
+        const to = colorStops[Math.ceil(segment)];
+        const amount = segment % 1;
+        stage.style.backgroundColor = `rgb(${Math.round(lerp(from[0], to[0], amount))}, ${Math.round(lerp(from[1], to[1], amount))}, ${Math.round(lerp(from[2], to[2], amount))})`;
+      }
+
+      function setupNativeFallback() {
+        html.classList.add("native-fallback");
+
+        const update = () => {
+          state.fallbackTicking = false;
+          const rect = story.getBoundingClientRect();
+          const distance = Math.max(1, story.offsetHeight - window.innerHeight);
+          const progress = clamp(-rect.top / distance, 0, 1);
+          requestFrame(Math.round(progress * (FRAME_COUNT - 1)));
+          applyNarrativeProgress(progress);
+        };
+
+        const requestUpdate = () => {
+          if (state.fallbackTicking) return;
+          state.fallbackTicking = true;
+          window.requestAnimationFrame(update);
+        };
+
+        window.addEventListener("scroll", requestUpdate, { passive: true });
+        window.addEventListener("resize", requestUpdate, { passive: true });
+        update();
+      }
+
+      function setupGsap() {
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.set([beatOne, beatTwo, beatThree], { autoAlpha: 0, y: 34 });
+        gsap.set(openingCopy, { autoAlpha: 1, y: 0 });
+
+        const timeline = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: story,
+            start: "top top",
+            end: "bottom bottom",
+            pin: stage,
+            pinSpacing: false,
+            scrub: 0.65,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate(self) {
+              requestFrame(Math.round(self.progress * (FRAME_COUNT - 1)));
+            },
+            onRefresh(self) {
+              requestFrame(Math.round(self.progress * (FRAME_COUNT - 1)));
+            },
+          },
+        });
+
+        timeline
+          .to(openingCopy, { autoAlpha: 0, y: -30, duration: 0.1 }, 0.1)
+          .to(stage, { backgroundColor: "#0d1012", duration: 0.2 }, 0.12)
+          .fromTo(beatOne, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.16)
+          .to(beatOne, { autoAlpha: 0, y: -28, duration: 0.08 }, 0.34)
+          .to(stage, { backgroundColor: "#0a0d10", duration: 0.18 }, 0.36)
+          .fromTo(beatTwo, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.4)
+          .to(beatTwo, { autoAlpha: 0, y: -28, duration: 0.08 }, 0.62)
+          .to(stage, { backgroundColor: "#0f0d0c", duration: 0.2 }, 0.64)
+          .fromTo(beatThree, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.68)
+          .addLabel("complete", 1);
+
+        state.timeline = timeline;
+        window.requestAnimationFrame(() => ScrollTrigger.refresh());
+      }
+
+      function setupResizeHandling() {
+        window.addEventListener("resize", () => {
+          window.clearTimeout(state.resizeTimer);
+          state.resizeTimer = window.setTimeout(() => {
+            resizeCanvas();
+            if (window.ScrollTrigger && state.timeline) window.ScrollTrigger.refresh();
+          }, 120);
+        }, { passive: true });
+      }
+
+      async function generateFrames() {
+        const frameSize = window.innerWidth <= 640 ? 480 : 720;
+        const batchSize = 6;
+
+        for (let index = 0; index < FRAME_COUNT; index += 1) {
+          const frameCanvas = document.createElement("canvas");
+          frameCanvas.width = frameSize;
+          frameCanvas.height = frameSize;
+          drawProceduralFrame(frameCanvas, index);
+          frames.push(frameCanvas);
+
+          const percent = Math.round(((index + 1) / FRAME_COUNT) * 100);
+          loadingCopy.textContent = `BUILDING MOTION FRAMES · ${String(percent).padStart(2, "0")}%`;
+          loadingState.style.setProperty("--load-progress", String((index + 1) / FRAME_COUNT));
+
+          if ((index + 1) % batchSize === 0 && index < FRAME_COUNT - 1) {
+            await new Promise((resolve) => window.requestAnimationFrame(resolve));
+          }
+        }
+      }
+
+      async function initialize() {
+        html.dataset.frameIndex = "0";
+        resizeCanvas();
+        await generateFrames();
+        resizeCanvas();
+
+        const representativeFrame = reducedMotion.matches ? 30 : 0;
+        setFrameState(representativeFrame);
+        drawFrame(representativeFrame);
+        await new Promise((resolve) => window.requestAnimationFrame(resolve));
+
+        loadingState.classList.add("is-ready");
+        loadingCopy.textContent = "MOTION FRAMES READY";
+
+        if (reducedMotion.matches) {
+          html.classList.add("reduced-motion");
+        } else if (window.gsap && window.ScrollTrigger) {
+          setupGsap();
+        } else {
+          setupNativeFallback();
+        }
+
+        setupResizeHandling();
+        html.dataset.demoReady = "true";
+      }
+
+      reducedMotion.addEventListener?.("change", () => window.location.reload());
+      initialize();
+    })();
+  </script>
+</body>
+</html>
