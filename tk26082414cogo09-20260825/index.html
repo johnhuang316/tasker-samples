@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>八大類內容網站｜Concept Demo</title>
+<style>
+:root{--ink:#18212b;--muted:#6b7785;--line:#dfe6ed;--soft:#f5f8fb;--brand:#2b6cb0;--brand-dark:#174a7c;--accent:#d97735;--white:#fff;}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;background:linear-gradient(135deg,#f7fafc,#eef4f8);line-height:1.65}button,input{font:inherit}button{cursor:pointer;border:0}.demo-bar{padding:8px 20px;background:#17212b;color:#dce9f3;text-align:center;font-size:13px;letter-spacing:.02em}.shell{max-width:1180px;margin:0 auto;padding:28px 20px 54px}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:20px 0 26px}.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.12em}.hero h1{font-size:clamp(28px,4vw,46px);line-height:1.2;margin:8px 0 10px}.hero p{max-width:650px;color:var(--muted);margin:0}.hero-note{min-width:210px;padding:16px;border:1px solid #c8d9e8;border-radius:16px;background:rgba(255,255,255,.74);font-size:13px;color:var(--brand-dark)}.layout{display:grid;grid-template-columns:245px 1fr;gap:22px}.panel,.content{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:20px;box-shadow:0 16px 38px rgba(31,61,85,.08)}.panel{padding:18px;height:max-content}.panel h2{font-size:15px;margin:0 0 12px}.category-list{display:grid;gap:7px}.category-list button{background:transparent;text-align:left;padding:9px 11px;border-radius:10px;color:var(--muted)}.category-list button:hover,.category-list button.active{background:#e8f1f9;color:var(--brand-dark);font-weight:700}.panel small{display:block;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.content{padding:22px}.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:20px}.search{flex:1;position:relative}.search input{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 14px;background:var(--soft);outline:none}.search input:focus{border-color:#79a8d0;box-shadow:0 0 0 3px #dbeaf6}.count{color:var(--muted);font-size:13px;white-space:nowrap}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.card{border:1px solid var(--line);border-radius:15px;padding:17px;background:var(--white);transition:transform .18s,box-shadow .18s,border-color .18s}.card:hover{transform:translateY(-2px);border-color:#a7c4dc;box-shadow:0 8px 20px rgba(39,91,133,.1)}.card .tag{display:inline-block;font-size:12px;color:var(--brand-dark);background:#e8f1f9;border-radius:999px;padding:2px 9px;margin-bottom:8px}.card h3{font-size:17px;line-height:1.4;margin:0 0 7px}.card p{color:var(--muted);font-size:14px;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.link{color:var(--brand);font-size:13px;font-weight:700;background:transparent;padding:0}.empty{padding:38px 12px;text-align:center;color:var(--muted);grid-column:1/-1}.footer-note{margin-top:22px;color:var(--muted);font-size:12px}.modal{position:fixed;inset:0;padding:22px;background:rgba(10,25,40,.42);display:none;align-items:center;justify-content:center;z-index:5}.modal.open{display:flex}.dialog{width:min(680px,100%);max-height:calc(100vh - 44px);overflow:auto;border-radius:20px;background:#fff;padding:25px;box-shadow:0 22px 80px rgba(0,0,0,.24)}.dialog-head{display:flex;justify-content:space-between;gap:14px}.close{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--muted);font-size:20px}.dialog h2{margin:10px 0 8px;line-height:1.35}.dialog .meta{color:var(--muted);font-size:13px}.dialog .body{margin-top:18px;padding:17px;border-radius:14px;background:var(--soft)}.admin{margin-top:20px;padding:16px;border:1px dashed #adc9de;border-radius:14px;background:#f8fbfd}.admin strong{font-size:14px}.admin button{margin-top:10px;background:var(--brand);color:#fff;border-radius:9px;padding:8px 12px;font-size:13px}.toast{position:fixed;right:20px;bottom:20px;background:#17212b;color:#fff;border-radius:12px;padding:11px 14px;font-size:13px;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:760px){.hero{display:block}.hero-note{margin-top:18px}.layout{grid-template-columns:1fr}.panel{padding:14px}.category-list{display:flex;overflow:auto}.category-list button{white-space:nowrap}.cards{grid-template-columns:1fr}.toolbar{display:block}.count{display:block;margin-top:8px}}
+</style>
+</head>
+<body>
+<div class="demo-bar">Concept Demo／概念樣品／非正式系統　·　使用合成資料與瀏覽器端互動</div>
+<main class="shell">
+  <section class="hero">
+    <div><div class="eyebrow">CONTENT WEBSITE · MVP FLOW</div><h1>讓八大類內容<br>更容易被找到</h1><p>這個概念樣品示範分類導覽、關鍵字搜尋與內容檢視的第一條 happy path。正式合作後再依實際資料結構、權限與部署環境完成串接。</p></div>
+    <div class="hero-note"><strong>本頁示範</strong><br>分類 → 篩選 → 搜尋 → 內容詳情<br><span>資料不會送往外部服務</span></div>
+  </section>
+  <div class="layout">
+    <aside class="panel">
+      <h2>內容分類</h2>
+      <div class="category-list" id="categories"></div>
+      <small>後續可依實際需求加入管理角色、表單通知、分析工具與其他第三方服務。</small>
+    </aside>
+    <section class="content">
+      <div class="toolbar"><label class="search"><input id="search" type="search" placeholder="搜尋標題或內容…" aria-label="搜尋標題或內容"></label><span class="count" id="count"></span></div>
+      <div class="cards" id="cards"></div>
+      <div class="footer-note">此頁為概念版本，沒有正式帳號、個資、付款、外部 API 或上線營運功能。</div>
+    </section>
+  </div>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><article class="dialog"><div class="dialog-head"><div><div class="eyebrow">CONTENT DETAIL</div><h2 id="dialogTitle"></h2><div class="meta" id="dialogMeta"></div></div><button class="close" id="close" aria-label="關閉">×</button></div><div class="body" id="dialogBody"></div><div class="admin"><strong>後台預覽</strong><br><span class="meta">正式合作後可依權限新增、編輯與發布內容；本樣品只保留瀏覽流程。</span><br><button id="draftBtn">模擬建立一筆草稿</button></div></article></div>
+<div class="toast" id="toast">已在瀏覽器端建立概念草稿（假資料）</div>
+<script>
+const categories=['全部內容','品牌介紹','服務說明','案例內容','使用指南','公告更新','常見問題','聯絡方式','最新消息'];
+const items=[
+ {id:1,cat:'品牌介紹',title:'我們如何整理八大類內容',text:'用一套清楚的分類與共用版型，讓訪客更快找到想看的資訊。',body:'這裡可放品牌故事、服務定位與需要長期維護的基本內容。正式版本會依實際內容欄位與審核流程管理。'},
+ {id:2,cat:'服務說明',title:'服務流程與交付方式',text:'從提出需求、確認資料到完成交付，每個階段都保留可追蹤的說明。',body:'服務頁可依不同內容類型呈現步驟、注意事項、常見問題與聯絡入口。'},
+ {id:3,cat:'案例內容',title:'案例：從需求到完成的整理方式',text:'以案例卡片呈現背景、做法與成果，方便使用者快速瀏覽。',body:'案例頁可延伸篩選條件與內容標籤；這份樣品使用合成案例，僅示範內容閱讀路徑。'},
+ {id:4,cat:'使用指南',title:'第一次使用的三個步驟',text:'把複雜資訊拆成容易閱讀的指引，降低第一次使用的理解成本。',body:'正式系統可在此加入圖文說明、下載檔案或與表單流程串接。'},
+ {id:5,cat:'公告更新',title:'八月內容更新通知',text:'本月新增常見問題與聯絡流程，並調整手機版閱讀順序。',body:'公告內容可依日期、分類與發布狀態管理，這裡使用假資料示範。'},
+ {id:6,cat:'常見問題',title:'如何找到需要的資訊？',text:'可從左側分類進入，也可以直接輸入關鍵字搜尋標題與摘要。',body:'搜尋目前在瀏覽器端完成；正式合作後可依資料量與權限需求決定查詢方式。'},
+ {id:7,cat:'聯絡方式',title:'留下想了解的主題',text:'將問題整理好後，交由團隊依流程回覆與追蹤。',body:'正式版本可依確認後的通知方式串接表單、Email 或其他既有系統。'},
+ {id:8,cat:'最新消息',title:'內容網站的後續擴充方向',text:'保留共用版型與欄位結構，後續可逐步加入新的內容類型。',body:'後續範圍可再依實際資料來源、管理角色、搜尋條件與部署環境收斂。'}
+];
+let selected='全部內容';
+const categoriesEl=document.querySelector('#categories'),cardsEl=document.querySelector('#cards'),searchEl=document.querySelector('#search'),countEl=document.querySelector('#count'),modal=document.querySelector('#modal'),closeBtn=document.querySelector('#close'),dialogTitle=document.querySelector('#dialogTitle'),dialogMeta=document.querySelector('#dialogMeta'),dialogBody=document.querySelector('#dialogBody'),draftBtn=document.querySelector('#draftBtn'),toast=document.querySelector('#toast');
+function renderCategories(){categoriesEl.innerHTML=categories.map(c=>`<button class="${c===selected?'active':''}" data-category="${c}">${c}</button>`).join('');categoriesEl.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.category;renderCategories();renderCards();}));}
+function renderCards(){const term=searchEl.value.trim().toLowerCase();const filtered=items.filter(x=>(selected==='全部內容'||x.cat===selected)&&(!term||`${x.title} ${x.text} ${x.body}`.toLowerCase().includes(term)));countEl.textContent=`顯示 ${filtered.length} 筆內容`;cardsEl.innerHTML=filtered.length?filtered.map(x=>`<article class="card"><span class="tag">${x.cat}</span><h3>${x.title}</h3><p>${x.text}</p><button class="link" data-id="${x.id}">查看內容 →</button></article>`).join(''):'<div class="empty">找不到符合條件的內容，請換一個分類或關鍵字。</div>';cardsEl.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>openItem(Number(b.dataset.id))));}
+function openItem(id){const x=items.find(item=>item.id===id);if(!x)return;dialogTitle.textContent=x.title;dialogMeta.textContent=`${x.cat}　·　Concept Demo 合成內容`;dialogBody.textContent=x.body;modal.classList.add('open');closeBtn.focus();}
+function closeModal(){modal.classList.remove('open');}
+searchEl.addEventListener('input',renderCards);closeBtn.addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});draftBtn.addEventListener('click',()=>{localStorage.setItem('conceptDraft','已建立一筆假草稿');toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)});renderCategories();renderCards();
+</script>
+</body>
+</html>
