@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Concept Demo｜H5 闖關遊戲</title>
+  <style>
+    :root { --ink:#213547; --muted:#627486; --cream:#fffaf0; --card:#ffffffdd; --green:#5aa469; --yellow:#ffd166; --red:#ef6f6c; }
+    * { box-sizing: border-box; }
+    body { margin:0; color:var(--ink); font-family: ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background:linear-gradient(160deg,#dff5e3 0%,#fff5d8 48%,#e7f0ff 100%); min-height:100vh; }
+    .wrap { width:min(960px,100%); margin:auto; padding:20px 16px 32px; }
+    .top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; }
+    h1 { margin:0 0 5px; font-size:clamp(25px,5vw,38px); letter-spacing:.02em; }
+    .eyebrow { color:#9a5b2a; font-weight:800; font-size:13px; letter-spacing:.12em; }
+    .notice { color:var(--muted); font-size:14px; line-height:1.6; margin:0; }
+    .pill { flex:none; background:#ffffffaa; border:1px solid #fff; border-radius:999px; padding:8px 12px; color:#55705c; font-size:12px; font-weight:800; }
+    .grid { display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:16px; align-items:start; }
+    .card { background:var(--card); border:1px solid #fff; box-shadow:0 14px 38px #6f826525; backdrop-filter:blur(8px); border-radius:24px; padding:16px; }
+    .game-card { padding:12px; }
+    canvas { display:block; width:100%; aspect-ratio:3/4; border-radius:17px; background:#9ed7a9; touch-action:none; }
+    .toolbar { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 4px 2px; }
+    .stats { display:flex; gap:10px; font-size:14px; font-weight:800; }
+    .stat { background:#fff9; padding:7px 10px; border-radius:12px; }
+    button { border:0; border-radius:13px; padding:10px 14px; font:inherit; font-weight:800; cursor:pointer; color:#fff; background:var(--green); box-shadow:0 5px 0 #3f7b4c; transition:transform .08s, box-shadow .08s; }
+    button:active { transform:translateY(3px); box-shadow:0 2px 0 #3f7b4c; }
+    .side h2 { font-size:17px; margin:2px 0 12px; }
+    .side p { color:var(--muted); line-height:1.65; font-size:14px; margin:8px 0; }
+    .board { margin:14px 0 18px; padding:0; list-style:none; }
+    .board li { display:flex; justify-content:space-between; padding:9px 10px; border-radius:11px; background:#fff8; margin:6px 0; font-size:14px; }
+    .board li:first-child { background:#fff1bd; }
+    .task { border-radius:15px; padding:12px; background:#e9f7ec; border:1px solid #c4e8ca; font-size:14px; line-height:1.6; }
+    .task strong { color:#347944; }
+    .controls { display:grid; grid-template-columns:repeat(3,48px); justify-content:center; gap:6px; margin:12px auto 0; }
+    .controls button { padding:8px 0; background:#527b96; box-shadow:0 4px 0 #38566a; }
+    .controls .empty { visibility:hidden; }
+    .foot { color:var(--muted); font-size:12px; text-align:center; margin:18px 0 0; }
+    @media (max-width:720px) { .grid { grid-template-columns:1fr; } .side { display:grid; grid-template-columns:1fr 1fr; gap:12px; } .side h2, .side .task { grid-column:1/-1; } .board { margin-bottom:0; } }
+    @media (max-width:430px) { .top { display:block; } .pill { display:inline-block; margin-top:10px; } .side { display:block; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div><div class="eyebrow">CONCEPT DEMO · 非正式系統</div><h1>小雞過馬路｜H5 闖關</h1><p class="notice">手機瀏覽器即可操作的核心流程示範：開始遊玩、躲避障礙、結算分數與模擬同步活動任務。</p></div>
+      <div class="pill">Mock API／假資料</div>
+    </header>
+    <section class="grid">
+      <div class="card game-card">
+        <canvas id="game" width="600" height="800" aria-label="H5 遊戲畫面"></canvas>
+        <div class="toolbar"><div class="stats"><span class="stat">分數 <b id="score">0</b></span><span class="stat">最佳 <b id="best">0</b></span></div><button id="start">開始遊玩</button></div>
+        <div class="controls" aria-label="觸控操作"><span class="empty"></span><button data-dir="up">▲</button><span class="empty"></span><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div>
+      </div>
+      <aside class="card side">
+        <h2>活動任務（模擬）</h2>
+        <div class="task"><strong id="taskState">尚未開始</strong><br>完成 1 局即可同步任務進度。</div>
+        <div><p>排行榜（Mock）</p><ol class="board" id="board"><li><span>小明</span><b>120</b></li><li><span>小花</span><b>95</b></li><li><span>阿凱</span><b>70</b></li></ol></div>
+        <div><p>操作方式</p><p>桌機使用方向鍵，手機可點下方按鈕或在畫面上滑動。抵達上方終點會完成一關，碰到車輛則結束本局。</p></div>
+      </aside>
+    </section>
+    <p class="foot">本頁為依案件需求製作的概念樣品，正式合作後再串接登入／匿名識別、分數、排行榜與活動 API。</p>
+  </main>
+<script>
+(() => {
+  const c = document.getElementById('game'), ctx = c.getContext('2d');
+  const scoreEl = document.getElementById('score'), bestEl = document.getElementById('best'), stateEl = document.getElementById('taskState'), startBtn = document.getElementById('start');
+  const W=c.width,H=c.height; let player, cars, running=false, score=0, best=Number(localStorage.getItem('h5-demo-best')||0), last=0, raf=0;
+  bestEl.textContent=best;
+  function reset(){ player={x:W/2,y:H-62,r:18}; cars=[]; for(let row=0;row<5;row++){ cars.push({x:(row%2?W-70:20), y:145+row*105, w:70, h:34, speed:(row%2?-1:1)*(105+row*17)}); } score=0; scoreEl.textContent=0; stateEl.textContent='進行中：避開障礙並抵達終點'; }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#7fc58e';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#bce3c0';ctx.fillRect(0,0,W,90);ctx.fillStyle='#fff1a8';ctx.fillRect(0,H-100,W,100);
+    ctx.fillStyle='#6ea678'; for(let y=92;y<H-100;y+=105){ctx.fillRect(0,y,W,68);ctx.fillStyle='#9ed7a9';ctx.fillRect(0,y+68,W,37);ctx.fillStyle='#6ea678';}
+    ctx.fillStyle='#356b43';ctx.font='800 25px system-ui';ctx.textAlign='center';ctx.fillText('終點',W/2,58);
+    cars.forEach(car=>{ctx.fillStyle='#ef6f6c';ctx.beginPath();ctx.roundRect(car.x,car.y,car.w,car.h,9);ctx.fill();ctx.fillStyle='#fff4dc';ctx.fillRect(car.x+13,car.y+6,20,13);ctx.fillRect(car.x+40,car.y+6,18,13);ctx.fillStyle='#263b4b';ctx.beginPath();ctx.arc(car.x+15,car.y+35,7,0,Math.PI*2);ctx.arc(car.x+55,car.y+35,7,0,Math.PI*2);ctx.fill();});
+    if(player){ctx.fillStyle='#ffd166';ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d95d39';ctx.beginPath();ctx.moveTo(player.x,player.y-22);ctx.lineTo(player.x+7,player.y-13);ctx.lineTo(player.x-7,player.y-13);ctx.closePath();ctx.fill();ctx.fillStyle='#213547';ctx.beginPath();ctx.arc(player.x-6,player.y-4,3,0,Math.PI*2);ctx.arc(player.x+6,player.y-4,3,0,Math.PI*2);ctx.fill();}
+    if(!running){ctx.fillStyle='#213547cc';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='800 30px system-ui';ctx.fillText('按「開始遊玩」試試看',W/2,H/2);ctx.font='16px system-ui';ctx.fillText('方向鍵／下方按鈕控制小雞',W/2,H/2+34);}
+  }
+  function move(dir){if(!running)return; const step=38; if(dir==='up')player.y-=step;if(dir==='down')player.y+=step;if(dir==='left')player.x-=step;if(dir==='right')player.x+=step; player.x=Math.max(20,Math.min(W-20,player.x));player.y=Math.max(110,Math.min(H-45,player.y)); if(player.y<110){score+=20;scoreEl.textContent=score;player.y=H-62;stateEl.textContent='完成一關！分數已寫入 Mock API';} }
+  function end(){running=false; stateEl.textContent='本局結束，可重新開始'; if(score>best){best=score;bestEl.textContent=best;localStorage.setItem('h5-demo-best',best);} draw(); }
+  function tick(t){if(!running){draw();return;} const dt=Math.min(0.04,(t-last)/1000||0);last=t;cars.forEach(car=>{car.x+=car.speed*dt;if(car.speed>0&&car.x>W+20)car.x=-car.w-20;if(car.speed<0&&car.x<-car.w-20)car.x=W+20;const dx=Math.abs(player.x-(car.x+car.w/2)),dy=Math.abs(player.y-(car.y+car.h/2));if(dx<player.r+car.w/2-9&&dy<player.r+car.h/2-6)end();});draw();raf=requestAnimationFrame(tick);}
+  startBtn.addEventListener('click',()=>{cancelAnimationFrame(raf);running=true;reset();draw();raf=requestAnimationFrame(tick);});
+  addEventListener('keydown',e=>{const m={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];if(m){e.preventDefault();move(m);}});
+  document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>move(b.dataset.dir)));
+  let touch=null;c.addEventListener('touchstart',e=>{touch=e.changedTouches[0];},{passive:true});c.addEventListener('touchend',e=>{if(!touch)return;const p=e.changedTouches[0],dx=p.clientX-touch.clientX,dy=p.clientY-touch.clientY;if(Math.max(Math.abs(dx),Math.abs(dy))>18)move(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));touch=null;},{passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>
