@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="網站架設概念樣品：產品分類、購物車與模擬下單流程" />
+    <title>拾光選物｜Concept Demo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="回到首頁">
+          <span class="brand-mark">拾</span>
+          <span><strong>拾光選物</strong><small>CONCEPT DEMO</small></span>
+        </a>
+        <button class="cart-button" id="open-cart" type="button" aria-controls="cart-drawer" aria-expanded="false">
+          購物車 <span id="cart-count" class="count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">CONCEPT DEMO · 非正式系統</p>
+            <h1>把喜歡的日常，<br /><em>分類收藏。</em></h1>
+            <p class="hero-copy">先用清楚的分類找到商品，再把想要的品項放進購物車。這個概念樣品示範一條簡單的瀏覽、加車與模擬下單流程。</p>
+            <a class="primary-link" href="#catalog">開始瀏覽 <span>↓</span></a>
+          </div>
+          <div class="hero-card" aria-label="概念樣品說明">
+            <span class="hero-card-label">FIRST RELEASE</span>
+            <strong>日常選物<br />小型商店</strong>
+            <span class="hero-line"></span>
+            <span class="hero-note">Synthetic products · localStorage cart</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalog">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">SHOP BY CATEGORY</p>
+              <h2>挑一個分類，開始逛逛</h2>
+            </div>
+            <p class="section-note">合成商品資料<br />僅供流程示範</p>
+          </div>
+          <nav class="category-tabs" id="categories" aria-label="商品分類"></nav>
+          <div class="product-grid" id="products" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="cart-drawer" id="cart-drawer" aria-label="購物車" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">YOUR CART</p>
+          <h2>購物車</h2>
+        </div>
+        <button class="icon-button" id="close-cart" type="button" aria-label="關閉購物車">×</button>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-empty" id="cart-empty">目前還沒有商品，先從分類挑選一件吧。</div>
+      <div class="drawer-foot">
+        <div class="total-row"><span>小計</span><strong id="cart-total">NT$0</strong></div>
+        <button class="checkout-button" id="checkout" type="button" disabled>模擬下單</button>
+        <p class="demo-disclaimer">此按鈕僅示範流程，不會產生真實訂單或付款。</p>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>拾光選物 · Concept Demo</span>
+        <span>假資料／localStorage／非正式系統</span>
+      </div>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>
