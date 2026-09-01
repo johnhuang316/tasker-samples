@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Concept Demo｜庫存管理 APP</title>
+  <style>
+    :root { --ink:#152033; --muted:#68758a; --line:#e6eaf0; --paper:#f7f9fc; --card:#fff; --brand:#2457d6; --brand-soft:#eaf0ff; --ok:#147a55; --warn:#a85c00; }
+    * { box-sizing: border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; }
+    .shell { max-width:1160px; margin:0 auto; padding:32px 20px 56px; }
+    .top { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:24px; }
+    .eyebrow { color:var(--brand); font-size:12px; font-weight:800; letter-spacing:.11em; }
+    h1 { margin:8px 0 8px; font-size:clamp(28px,4vw,44px); letter-spacing:-.03em; }
+    .lead { color:var(--muted); max-width:680px; line-height:1.75; margin:0; }
+    .badge { background:#fff2d9; color:#8a4f00; border:1px solid #f0d6a3; border-radius:999px; padding:9px 14px; font-size:13px; white-space:nowrap; }
+    .grid { display:grid; grid-template-columns:1.35fr .9fr; gap:18px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 28px rgba(30,48,80,.05); padding:22px; }
+    .card h2 { margin:0 0 4px; font-size:20px; }
+    .sub { color:var(--muted); margin:0 0 18px; font-size:14px; line-height:1.6; }
+    .stock-list { display:grid; gap:10px; }
+    .stock-row { border:1px solid var(--line); border-radius:13px; padding:14px; display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .stock-row strong { display:block; margin-bottom:4px; }
+    .meta { color:var(--muted); font-size:13px; }
+    .stock { text-align:right; min-width:88px; }
+    .stock b { display:block; font-size:24px; color:var(--brand); }
+    .stock span { color:var(--muted); font-size:12px; }
+    form { display:grid; gap:12px; }
+    label { display:grid; gap:6px; color:var(--muted); font-size:13px; }
+    select,input,button { font:inherit; }
+    select,input { width:100%; border:1px solid #d9dfeb; border-radius:10px; padding:11px 12px; color:var(--ink); background:#fff; }
+    .split { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    button { border:0; border-radius:10px; padding:12px 14px; cursor:pointer; font-weight:750; }
+    .primary { background:var(--brand); color:#fff; }
+    .secondary { background:var(--brand-soft); color:var(--brand); }
+    .notice { min-height:22px; color:var(--ok); font-size:13px; margin:0; }
+    .history { margin-top:18px; border-top:1px solid var(--line); padding-top:16px; }
+    .history h3 { margin:0 0 10px; font-size:15px; }
+    .history-list { display:grid; gap:7px; max-height:180px; overflow:auto; }
+    .history-item { display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--line); }
+    .history-item span { color:var(--muted); }
+    .positive { color:var(--ok); font-weight:700; }
+    .negative { color:#b53a3a; font-weight:700; }
+    .bom-result { margin-top:12px; background:#f8fbff; border:1px solid #dce8ff; border-radius:12px; padding:12px; color:#35506f; line-height:1.7; font-size:14px; }
+    .footer { margin-top:18px; color:var(--muted); font-size:12px; line-height:1.7; }
+    @media (max-width:780px) { .top { display:block; } .badge { display:inline-block; margin-top:15px; } .grid { grid-template-columns:1fr; } .shell { padding-top:24px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div>
+        <div class="eyebrow">CONCEPT DEMO · INVENTORY FLOW</div>
+        <h1>庫存管理 APP 概念樣品</h1>
+        <p class="lead">以合成資料示範架上日帳、圖片留存、庫存異動紀錄，以及 BOM 換算後的用料需求。這個頁面是概念版本，資料只保存在目前瀏覽器。</p>
+      </div>
+      <div class="badge">概念樣品｜非正式系統</div>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>目前庫存</h2>
+        <p class="sub">選取品項後可記錄入庫、出庫或盤點調整；每次異動會留下時間與原因。</p>
+        <div id="stockRows" class="stock-list" aria-live="polite"></div>
+        <div class="history">
+          <h3>最近異動</h3>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </article>
+
+      <aside class="card">
+        <h2>記錄庫存異動</h2>
+        <p class="sub">用正數表示入庫，負數表示出庫。</p>
+        <form id="changeForm">
+          <label>品項
+            <select id="productSelect"></select>
+          </label>
+          <div class="split">
+            <label>異動數量
+              <input id="delta" type="number" value="5" step="1" required>
+            </label>
+            <label>原因
+              <input id="reason" value="每日盤點" maxlength="30" required>
+            </label>
+          </div>
+          <button class="primary" id="apply" type="submit">儲存異動</button>
+          <p id="changeNotice" class="notice" role="status"></p>
+        </form>
+
+        <div class="history">
+          <h2>BOM 庫存換算</h2>
+          <p class="sub">輸入預計製作數量，快速查看所需原料。</p>
+          <form id="bomForm">
+            <label>成品
+              <select id="bomProduct">
+                <option value="starter">展示架套組</option>
+                <option value="gift">禮盒組</option>
+              </select>
+            </label>
+            <label>製作數量
+              <input id="bomQty" type="number" min="1" value="3" required>
+            </label>
+            <button class="secondary" type="submit">計算用料</button>
+          </form>
+          <div id="bomResult" class="bom-result" aria-live="polite">選擇數量後會顯示 BOM 用料需求。</div>
+        </div>
+      </aside>
+    </section>
+    <p class="footer">本 Concept Demo 僅示範核心操作流程，使用假資料與 localStorage；正式合作後再依實際 iOS 介面、帳號權限、資料庫、上架與 BOM 規則完成整合。</p>
+  </main>
+  <script>
+    const seed = [
+      { id:'case', name:'展示架套組', unit:'組', stock:24, image:'合成示意圖' },
+      { id:'panel', name:'展示板', unit:'片', stock:86, image:'合成示意圖' },
+      { id:'hook', name:'掛勾', unit:'個', stock:140, image:'合成示意圖' },
+      { id:'box', name:'禮盒包材', unit:'組', stock:52, image:'合成示意圖' }
+    ];
+    const bom = {
+      starter: { name:'展示架套組', parts:[['展示板',2],['掛勾',4]] },
+      gift: { name:'禮盒組', parts:[['禮盒包材',1],['掛勾',2]] }
+    };
+    const storeKey = 'tasker-concept-inventory-v1';
+    const historyKey = 'tasker-concept-inventory-history-v1';
+    let items = JSON.parse(localStorage.getItem(storeKey) || 'null') || seed.map(x => ({...x}));
+    let history = JSON.parse(localStorage.getItem(historyKey) || 'null') || [];
+    const rows = document.querySelector('#stockRows');
+    const select = document.querySelector('#productSelect');
+    const historyList = document.querySelector('#historyList');
+    const notice = document.querySelector('#changeNotice');
+    function persist(){ localStorage.setItem(storeKey, JSON.stringify(items)); localStorage.setItem(historyKey, JSON.stringify(history)); }
+    function render(){
+      rows.innerHTML = items.map(x => `<div class="stock-row"><div><strong>${x.name}</strong><div class="meta">${x.image} · 單位：${x.unit}</div></div><div class="stock"><b>${x.stock}</b><span>${x.unit}</span></div></div>`).join('');
+      select.innerHTML = items.map(x => `<option value="${x.id}">${x.name}</option>`).join('');
+      historyList.innerHTML = history.length ? history.slice(0,8).map(x => `<div class="history-item"><span>${x.time} · ${x.name} · ${x.reason}</span><b class="${x.delta >= 0 ? 'positive':'negative'}">${x.delta >= 0 ? '+' : ''}${x.delta}</b></div>`).join('') : '<div class="meta">尚未有異動紀錄</div>';
+    }
+    document.querySelector('#changeForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const item = items.find(x => x.id === select.value);
+      const delta = Number(document.querySelector('#delta').value);
+      const reason = document.querySelector('#reason').value.trim();
+      if(!item || !Number.isInteger(delta) || !delta || !reason) return;
+      item.stock = Math.max(0, item.stock + delta);
+      history.unshift({name:item.name, delta, reason, time:new Date().toLocaleString('zh-TW',{hour12:false})});
+      persist(); render(); notice.textContent = `已記錄「${item.name}」${delta > 0 ? '入庫':'出庫'} ${Math.abs(delta)} ${item.unit}`;
+    });
+    document.querySelector('#bomForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const recipe = bom[document.querySelector('#bomProduct').value];
+      const qty = Math.max(1, Number(document.querySelector('#bomQty').value) || 1);
+      document.querySelector('#bomResult').innerHTML = `<strong>${recipe.name} × ${qty}</strong><br>${recipe.parts.map(([name, amount]) => `${name}：${amount * qty}`).join('　·　')}`;
+    });
+    render();
+  </script>
+</body>
+</html>
