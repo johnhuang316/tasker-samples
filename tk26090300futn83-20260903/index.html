@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Concept Demo｜會員預約流程</title>
+  <style>
+    :root { --ink:#172235; --muted:#68758a; --line:#e7ebf2; --paper:#f6f8fb; --card:#fff; --brand:#3559c7; --brand-soft:#edf1ff; --ok:#147b58; --warn:#8a5400; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; }
+    .shell { max-width:1120px; margin:0 auto; padding:30px 20px 56px; }
+    .top { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:22px; }
+    .eyebrow { color:var(--brand); font-size:12px; font-weight:800; letter-spacing:.12em; }
+    h1 { margin:8px 0 10px; font-size:clamp(28px,4vw,46px); letter-spacing:-.04em; }
+    .lead { max-width:680px; margin:0; color:var(--muted); line-height:1.75; }
+    .badge { flex:none; color:var(--warn); background:#fff3dc; border:1px solid #efd7a4; border-radius:999px; padding:9px 13px; font-size:13px; }
+    .grid { display:grid; grid-template-columns:1.1fr .9fr; gap:18px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 12px 30px rgba(28,45,75,.05); }
+    h2 { margin:0 0 5px; font-size:20px; }
+    .sub { margin:0 0 18px; color:var(--muted); font-size:14px; line-height:1.65; }
+    .services { display:grid; gap:10px; }
+    .service { display:flex; justify-content:space-between; align-items:center; gap:15px; border:1px solid var(--line); border-radius:13px; padding:14px; cursor:pointer; }
+    .service:hover, .service.selected { border-color:#9baef0; background:#fafbff; }
+    .service strong { display:block; margin-bottom:4px; }
+    .service span { color:var(--muted); font-size:13px; }
+    .price { color:var(--brand); font-size:18px; font-weight:800; white-space:nowrap; }
+    form { display:grid; gap:12px; }
+    label { display:grid; gap:6px; color:var(--muted); font-size:13px; }
+    input, select, button { font:inherit; }
+    input, select { width:100%; border:1px solid #d7deea; border-radius:10px; padding:11px 12px; color:var(--ink); background:#fff; }
+    .split { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    button { border:0; border-radius:10px; padding:12px 14px; cursor:pointer; font-weight:760; }
+    .primary { background:var(--brand); color:#fff; }
+    .secondary { background:var(--brand-soft); color:var(--brand); }
+    .summary { display:grid; gap:9px; background:#f9faff; border:1px solid #dfe5ff; border-radius:12px; padding:13px; color:#42516e; font-size:14px; line-height:1.65; }
+    .summary b { color:var(--ink); }
+    .notice { min-height:22px; margin:0; color:var(--ok); font-size:13px; line-height:1.55; }
+    .member { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+    .history { display:grid; gap:8px; max-height:150px; overflow:auto; }
+    .history-item { display:flex; justify-content:space-between; gap:12px; border-bottom:1px dashed var(--line); padding:8px 0; font-size:13px; }
+    .history-item span { color:var(--muted); }
+    .footer { margin:18px 0 0; color:var(--muted); font-size:12px; line-height:1.75; }
+    @media (max-width:760px) { .top { display:block; } .badge { display:inline-block; margin-top:15px; } .grid { grid-template-columns:1fr; } .split { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div>
+        <div class="eyebrow">CONCEPT DEMO · MEMBER BOOKING</div>
+        <h1>會員預約流程概念樣品</h1>
+        <p class="lead">以合成服務與時段示範「選擇服務 → 選時段 → 填寫預約 → 模擬結帳 → 查閱預約紀錄」的核心體驗，讓手機與桌機都能先看見流程。</p>
+      </div>
+      <div class="badge">概念樣品｜非正式系統</div>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>選擇服務</h2>
+        <p class="sub">目前使用假資料；點選服務後可在右側完成預約。</p>
+        <div id="services" class="services"></div>
+        <div class="member">
+          <h2>會員預約紀錄</h2>
+          <p class="sub">紀錄只保存在目前瀏覽器的 localStorage。</p>
+          <div id="history" class="history" aria-live="polite"></div>
+        </div>
+      </article>
+
+      <aside class="card">
+        <h2>完成預約</h2>
+        <p class="sub">這裡示範下單前的資訊確認與模擬結帳，不會發送付款或通知。</p>
+        <div id="summary" class="summary" aria-live="polite">請先選擇左側服務。</div>
+        <form id="bookingForm" hidden>
+          <label>預約日期
+            <select id="date" required>
+              <option value="9/8（二）">9/8（二）</option>
+              <option value="9/10（四）">9/10（四）</option>
+              <option value="9/12（六）">9/12（六）</option>
+            </select>
+          </label>
+          <label>預約時段
+            <select id="slot" required>
+              <option value="10:00–11:00">10:00–11:00</option>
+              <option value="14:00–15:00">14:00–15:00</option>
+              <option value="16:00–17:00">16:00–17:00</option>
+            </select>
+          </label>
+          <div class="split">
+            <label>會員姓名
+              <input id="name" maxlength="20" placeholder="概念資料" required>
+            </label>
+            <label>備註
+              <input id="note" maxlength="40" placeholder="可留空">
+            </label>
+          </div>
+          <button class="primary" type="submit">確認預約並模擬結帳</button>
+          <p id="notice" class="notice" role="status"></p>
+        </form>
+      </aside>
+    </section>
+    <p class="footer">本 Concept Demo 僅示範一條使用假資料的 happy path；正式合作後再依實際會員資料、預約規則、付款服務、權限、通知與部署環境完成整合。請勿輸入真實個資或付款資料。</p>
+  </main>
+  <script>
+    const services = [
+      { id:'consult', name:'初次諮詢', desc:'30 分鐘線上諮詢', price:800 },
+      { id:'plan', name:'方案規劃', desc:'60 分鐘需求討論', price:1500 },
+      { id:'follow', name:'會員回訪', desc:'45 分鐘線上回訪', price:1000 }
+    ];
+    const bookingKey = 'tasker-concept-bookings-v1';
+    let selected = null;
+    let bookings = JSON.parse(localStorage.getItem(bookingKey) || 'null') || [];
+    const serviceRoot = document.querySelector('#services');
+    const summary = document.querySelector('#summary');
+    const form = document.querySelector('#bookingForm');
+    const history = document.querySelector('#history');
+    const notice = document.querySelector('#notice');
+    function save(){ localStorage.setItem(bookingKey, JSON.stringify(bookings)); }
+    function renderServices(){
+      serviceRoot.innerHTML = services.map(s => `<div class="service ${selected && selected.id === s.id ? 'selected':''}" data-id="${s.id}" tabindex="0"><div><strong>${s.name}</strong><span>${s.desc}</span></div><div class="price">NT$${s.price.toLocaleString()}</div></div>`).join('');
+      serviceRoot.querySelectorAll('.service').forEach(el => el.addEventListener('click', () => { selected = services.find(s => s.id === el.dataset.id); renderServices(); renderSummary(); }));
+    }
+    function renderSummary(){
+      if(!selected){ summary.textContent = '請先選擇左側服務。'; form.hidden = true; return; }
+      summary.innerHTML = `<div>服務：<b>${selected.name}</b></div><div>費用：<b>NT$${selected.price.toLocaleString()}（模擬）</b></div>`;
+      form.hidden = false;
+    }
+    function renderHistory(){
+      history.innerHTML = bookings.length ? bookings.slice().reverse().map(b => `<div class="history-item"><span>${b.date} ${b.slot} · ${b.name}</span><b>${b.service}</b></div>`).join('') : '<span class="sub">尚未有預約紀錄</span>';
+    }
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if(!selected) return;
+      const name = document.querySelector('#name').value.trim();
+      const date = document.querySelector('#date').value;
+      const slot = document.querySelector('#slot').value;
+      if(!name) return;
+      bookings.push({ service:selected.name, date, slot, name, note:document.querySelector('#note').value.trim(), createdAt:new Date().toISOString() });
+      save(); renderHistory(); notice.textContent = `已建立「${selected.name}」的概念預約，並完成模擬結帳。`;
+      form.reset();
+    });
+    renderServices(); renderHistory();
+  </script>
+</body>
+</html>
