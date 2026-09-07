@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meta Business × WhatsApp Cloud API｜Concept Demo</title>
+  <style>
+    :root{color-scheme:light;--ink:#17212b;--muted:#667085;--line:#e6e9ee;--blue:#1264a3;--green:#16794c;--bg:#f7f9fc;--card:#fff;--orange:#a24b05}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Noto Sans TC",sans-serif}
+    .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 60px}.demo{display:inline-flex;gap:8px;align-items:center;background:#fff2e8;color:var(--orange);border:1px solid #ffd9bd;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;letter-spacing:.02em}
+    h1{font-size:clamp(28px,5vw,48px);line-height:1.15;margin:18px 0 12px;letter-spacing:-.03em}h2{font-size:21px;margin:0 0 12px}h3{font-size:16px;margin:0 0 6px}.lead{color:var(--muted);max-width:760px;margin:0 0 26px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 5px 18px rgba(23,33,43,.04)}
+    .status{display:flex;align-items:center;gap:10px}.dot{width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #e4f4ec}.muted{color:var(--muted);font-size:14px}.section{margin-top:24px}.flow{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.button{appearance:none;border:0;border-radius:10px;padding:10px 14px;background:var(--blue);color:#fff;font:inherit;font-weight:700;cursor:pointer}.button.secondary{background:#edf4fa;color:var(--blue)}.button:focus-visible,textarea:focus-visible{outline:3px solid #b8ddfa;outline-offset:2px}
+    select,textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;color:var(--ink)}textarea{min-height:92px;resize:vertical}.field{margin:12px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;background:#eef7f1;color:var(--green);font-weight:700}.event{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:#fbfcfe}.event.incoming{border-left:4px solid var(--blue)}.event.outgoing{border-left:4px solid var(--green)}pre{white-space:pre-wrap;word-break:break-word;background:#111827;color:#e5edf7;border-radius:12px;padding:14px;min-height:150px;overflow:auto;font-size:13px}.note{color:var(--muted);font-size:13px;margin-top:18px}.footer{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+    @media(max-width:760px){.grid,.flow{grid-template-columns:1fr}.wrap{padding:22px 15px 48px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <span class="demo">Concept Demo · 概念樣品 · 非正式系統</span>
+    <h1>Meta Business ×<br>WhatsApp Cloud API</h1>
+    <p class="lead">用一條可操作的 mock 流程，示範完成帳號環境後如何接收 webhook、查看事件，並由客服送出回覆。所有資料都在瀏覽器內模擬，沒有連到真實 Meta 或 WhatsApp 帳號。</p>
+
+    <section class="grid" aria-label="設定狀態">
+      <article class="card"><div class="status"><span class="dot"></span><h3>Business Manager</h3></div><p class="muted">企業驗證與資產權限（mock）</p><span class="pill">已連結（示意）</span></article>
+      <article class="card"><div class="status"><span class="dot"></span><h3>WhatsApp Cloud API</h3></div><p class="muted">電話號碼與訊息服務（mock）</p><span class="pill">可收發（示意）</span></article>
+      <article class="card"><div class="status"><span class="dot"></span><h3>Webhook</h3></div><p class="muted">訊息事件訂閱與檢視（mock）</p><span class="pill">已訂閱（示意）</span></article>
+    </section>
+
+    <section class="section flow">
+      <article class="card">
+        <h2>① 模擬收到 WhatsApp 訊息</h2>
+        <p class="muted">按下按鈕後會產生一筆 webhook event，方便檢查訊息內容與後續處理位置。</p>
+        <div class="field"><label for="preset">測試情境</label><select id="preset"><option value="trip">旅客：想詢問慢養行程</option><option value="price">旅客：請提供報名資訊</option><option value="human">旅客：希望轉真人客服</option></select></div>
+        <div class="row"><button class="button" id="receive">模擬 webhook 收件</button><button class="button secondary" id="clear">清除本次示範</button></div>
+        <div id="inbox" aria-live="polite"></div>
+      </article>
+      <article class="card">
+        <h2>② 查看事件資料</h2>
+        <p class="muted">正式串接時，這裡對應 webhook 驗證、事件解析與訊息紀錄。</p>
+        <pre id="json">尚未產生事件</pre>
+        <div class="field"><label for="reply">客服回覆（mock）</label><textarea id="reply">您好，已收到您的訊息，我們會協助確認行程與報名方式。</textarea></div>
+        <button class="button" id="send">模擬送出回覆</button>
+      </article>
+    </section>
+
+    <p class="note">本頁為公開概念樣品，使用合成資料與瀏覽器記憶體狀態；正式合作後才會依實際 Meta Business 權限、WhatsApp Cloud API、Webhook 與訊息流程完成設定，並補上權限、錯誤處理與部署。</p>
+    <footer class="footer">Demo scope: mock webhook receive → event inspection → mock reply. No credentials, client data, paid API, or outbound message is used.</footer>
+  </main>
+  <script>
+    const state = {events: [], selected: null};
+    const presets = {
+      trip: '您好，我想了解慢養行程的日期與內容。',
+      price: '請提供報名方式與費用資訊，謝謝。',
+      human: '我有其他問題，想請真人客服協助。'
+    };
+    const inbox = document.querySelector('#inbox');
+    const json = document.querySelector('#json');
+    const preset = document.querySelector('#preset');
+    function render(){
+      inbox.innerHTML = state.events.length ? state.events.map((e,i)=>`<div class="event ${e.direction}"><strong>${e.direction==='incoming'?'收到訊息':'已送出回覆'}</strong><div>${escapeHtml(e.text)}</div><small class="muted">${e.time} · ${e.id}</small></div>`).join('') : '<p class="muted">尚未有事件，先按「模擬 webhook 收件」。</p>';
+      json.textContent = state.selected ? JSON.stringify(state.selected,null,2) : '尚未產生事件';
+    }
+    function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+    function now(){return new Date().toLocaleString('zh-TW',{hour12:false});}
+    document.querySelector('#receive').addEventListener('click',()=>{
+      const event={id:'wamid.MOCK_'+String(Date.now()).slice(-8),direction:'incoming',text:presets[preset.value],time:now(),type:'text',from:'mock-user'};
+      state.events.push(event); state.selected={object:'whatsapp_business_account',entry:[{changes:[{field:'messages',value:{messages:[{id:event.id,type:event.type,text:{body:event.text}}]}}]}]}; render();
+    });
+    document.querySelector('#send').addEventListener('click',()=>{
+      const text=document.querySelector('#reply').value.trim(); if(!text)return;
+      const event={id:'mock-out-'+String(Date.now()).slice(-8),direction:'outgoing',text,time:now(),type:'text',to:'mock-user'}; state.events.push(event); state.selected={messaging_product:'whatsapp',contacts:[{wa_id:'mock-user'}],messages:[{id:event.id,status:'accepted',text:{body:text}}]}; render();
+    });
+    document.querySelector('#clear').addEventListener('click',()=>{state.events=[];state.selected=null;render();});
+    render();
+  </script>
+</body>
+</html>
