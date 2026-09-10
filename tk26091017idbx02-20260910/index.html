@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LINE 客服需求轉交｜Concept Demo</title>
+  <style>
+    :root { color-scheme: light; --ink:#14213d; --muted:#64748b; --line:#dbe4ef; --blue:#2563eb; --green:#0f766e; --wash:#f5f8fc; --amber:#b45309; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--wash); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif; line-height:1.65; }
+    main { width:min(1060px, calc(100% - 32px)); margin:32px auto 56px; }
+    .hero { background:linear-gradient(135deg,#102a56,#2563eb); color:#fff; border-radius:24px; padding:30px; box-shadow:0 18px 50px #163b711f; }
+    .eyebrow { letter-spacing:.12em; font-size:12px; font-weight:700; opacity:.8; }
+    h1 { margin:8px 0 10px; font-size:clamp(28px,5vw,46px); line-height:1.15; }
+    .hero p { margin:0; max-width:720px; color:#e5efff; }
+    .notice { margin-top:18px; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid #ffffff55; border-radius:999px; font-size:13px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:20px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 8px 28px #17365d0b; }
+    .card h2 { margin:0 0 12px; font-size:20px; }
+    .muted { color:var(--muted); }
+    .steps { display:grid; gap:12px; margin:0; padding:0; list-style:none; }
+    .step { display:flex; gap:12px; align-items:flex-start; }
+    .step .num { flex:0 0 28px; height:28px; display:grid; place-items:center; border-radius:50%; background:#dbeafe; color:#1d4ed8; font-weight:800; }
+    .step strong { display:block; }
+    button { border:0; border-radius:10px; padding:11px 15px; background:var(--blue); color:#fff; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 5px 15px #2563eb2b; }
+    button.secondary { background:#e7eef8; color:var(--ink); box-shadow:none; }
+    button:disabled { cursor:not-allowed; opacity:.55; }
+    .demo-toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 18px; }
+    .request { border:1px solid var(--line); border-radius:14px; padding:16px; background:#fbfdff; }
+    .request-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .badge { display:inline-flex; padding:4px 9px; border-radius:999px; background:#fef3c7; color:var(--amber); font-size:12px; font-weight:800; white-space:nowrap; }
+    .badge.done { background:#ccfbf1; color:var(--green); }
+    .meta { margin-top:8px; display:grid; gap:5px; color:#334155; font-size:14px; }
+    .meta span { color:var(--muted); }
+    .transcript { margin-top:14px; display:grid; gap:8px; }
+    .bubble { padding:10px 12px; border-radius:12px; background:#eff6ff; border-left:3px solid #60a5fa; }
+    .bubble.agent { background:#f0fdf4; border-left-color:#34d399; }
+    .empty { color:var(--muted); padding:18px 0 4px; }
+    .footer-note { margin-top:18px; color:var(--muted); font-size:13px; }
+    @media (max-width:760px) { main { width:min(100% - 20px, 1060px); margin-top:20px; } .grid { grid-template-columns:1fr; } .hero { padding:24px; border-radius:18px; } .card { padding:18px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">LINE CUSTOMER SUPPORT WORKFLOW</div>
+      <h1>讓台灣客服的需求，清楚交到美國客服手上</h1>
+      <p>這個概念樣品用一條簡化流程示範：模擬客戶從 LINE 提出物流／代購需求，台灣客服補充紀錄後，再讓美國客服查看完整對話並接手處理。</p>
+      <div class="notice">Concept Demo · 概念樣品 · 非正式系統</div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>示範流程</h2>
+        <ol class="steps">
+          <li class="step"><div class="num">1</div><div><strong>客戶從 LINE 提出需求</strong><span class="muted">以假資料模擬一筆物流／代購詢問。</span></div></li>
+          <li class="step"><div class="num">2</div><div><strong>台灣客服整理進件</strong><span class="muted">保留原始訊息並補上案件狀態。</span></div></li>
+          <li class="step"><div class="num">3</div><div><strong>美國客服接手</strong><span class="muted">查看同一筆紀錄，確認後續處理人員。</span></div></li>
+        </ol>
+        <p class="footer-note">目前所有內容都是瀏覽器端 mock，沒有連接正式 LINE 帳號或外部 API。</p>
+      </article>
+
+      <article class="card" aria-live="polite">
+        <h2>可操作的核心流程</h2>
+        <div class="demo-toolbar">
+          <button id="newRequest">模擬收到 LINE 需求</button>
+          <button id="reset" class="secondary">重設示範</button>
+        </div>
+        <div id="requestArea" class="empty">按下按鈕後，這裡會出現一筆模擬進件。</div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <h2>正式合作後可再串接的部分</h2>
+      <p class="muted" style="margin-bottom:0">正式版本再依實際 LINE Official Account、客服分工、既有系統與資料保存方式，補上 webhook、權限、通知、查詢與錯誤處理。這份樣品只用來確認跨客服查看與交接的核心使用情境。</p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const area = document.getElementById('requestArea');
+      const newButton = document.getElementById('newRequest');
+      const resetButton = document.getElementById('reset');
+      const STORAGE_KEY = 'line-support-concept-demo';
+      let request = null;
+      try { request = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (_) { request = null; }
+
+      function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(request)); } catch (_) {}
+      }
+      function render() {
+        if (!request) {
+          area.className = 'empty';
+          area.textContent = '按下按鈕後，這裡會出現一筆模擬進件。';
+          return;
+        }
+        const done = request.status === '美國客服已接手';
+        area.className = 'request';
+        area.innerHTML = `
+          <div class="request-head">
+            <div><strong>${request.subject}</strong><div class="muted">案件編號：${request.id}</div></div>
+            <span class="badge ${done ? 'done' : ''}">${request.status}</span>
+          </div>
+          <div class="meta">
+            <div><span>客戶地區：</span>台灣</div>
+            <div><span>服務方向：</span>跨境取件／代購需求</div>
+            <div><span>目前處理：</span>${done ? '美國客服查看紀錄後接手' : '台灣客服等待交接'}</div>
+          </div>
+          <div class="transcript">
+            <div class="bubble"><strong>客戶（LINE）</strong><br>想詢問從台灣供應商取件寄回美國的方式。</div>
+            <div class="bubble agent"><strong>台灣客服紀錄</strong><br>已補充需求，請美國客服依對話內容確認後續服務。</div>
+            ${done ? '<div class="bubble agent"><strong>美國客服</strong><br>已查看同一筆需求紀錄，準備接續處理。</div>' : ''}
+          </div>
+          <div class="demo-toolbar" style="margin-bottom:0;margin-top:14px">
+            <button id="handoff" ${done ? 'disabled' : ''}>${done ? '已完成交接' : '轉交美國客服'}</button>
+          </div>`;
+        const handoff = document.getElementById('handoff');
+        if (handoff && !done) {
+          handoff.addEventListener('click', () => { request.status = '美國客服已接手'; save(); render(); });
+        }
+      }
+      newButton.addEventListener('click', () => {
+        request = { id:'LINE-DEMO-001', subject:'客戶詢問跨境取件與代購服務', status:'台灣客服待整理' };
+        save(); render();
+      });
+      resetButton.addEventListener('click', () => { request = null; try { localStorage.removeItem(STORAGE_KEY); } catch (_) {} render(); });
+      render();
+    })();
+  </script>
+</body>
+</html>
