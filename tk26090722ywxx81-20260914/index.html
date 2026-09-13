@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>比賽服裝客製預覽｜Concept Demo</title>
+  <style>
+    :root{--ink:#18202c;--muted:#667085;--line:#e5e7eb;--paper:#f7f8fb;--accent:#4f46e5;--accent-dark:#3730a3;}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.6}
+    .wrap{max-width:1080px;margin:auto;padding:24px 18px 56px}.demo{display:inline-flex;gap:8px;align-items:center;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;letter-spacing:.02em}
+    header{padding:26px 0 22px} h1{font-size:clamp(28px,5vw,48px);line-height:1.15;margin:14px 0 10px;letter-spacing:-.04em} .lead{margin:0;color:var(--muted);max-width:690px}
+    .grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:20px;align-items:start}.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 12px 36px rgba(16,24,40,.06);padding:22px}.card h2{font-size:18px;margin:0 0 18px}.preview-card{position:sticky;top:16px}
+    .field{margin:0 0 18px}.field label,.field legend{display:block;font-weight:700;font-size:14px;margin-bottom:8px}.field legend{padding:0}.choices{display:flex;gap:8px;flex-wrap:wrap}.choices label{position:relative;margin:0}.choices input{position:absolute;opacity:0;pointer-events:none}.choices span{display:block;cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff;color:#344054;font-size:14px}.choices input:checked+span{border-color:var(--accent);background:#eef2ff;color:var(--accent-dark);box-shadow:0 0 0 2px #c7d2fe}.swatches span{padding-left:34px;position:relative}.swatches span:before{content:"";position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:var(--swatch);border:1px solid rgba(0,0,0,.14)}
+    input[type=text],select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:11px 12px;font:inherit;background:#fff;color:var(--ink)}input[type=text]:focus,select:focus{outline:3px solid #c7d2fe;border-color:var(--accent)}.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+    button{border:0;border-radius:10px;padding:11px 16px;background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer}button:hover{background:var(--accent-dark)}button.secondary{background:#eef2ff;color:var(--accent-dark)}button.secondary:hover{background:#e0e7ff}.actions{display:flex;gap:10px;flex-wrap:wrap}
+    .stage{background:linear-gradient(145deg,#eef2ff,#f8fafc);border-radius:16px;min-height:310px;display:grid;place-items:center;padding:18px;overflow:hidden}.shirt{width:min(74%,260px);aspect-ratio:1/1.08;position:relative;filter:drop-shadow(0 18px 13px rgba(31,41,55,.16));transition:.2s}.shirt-body{position:absolute;inset:14% 13% 0;background:var(--shirt);border-radius:19px 19px 8px 8px;clip-path:polygon(20% 0,36% 0,42% 8%,58% 8%,64% 0,80% 0,100% 25%,84% 37%,84% 100%,16% 100%,16% 37%,0 25%)}.shirt-neck{position:absolute;z-index:2;top:13%;left:38%;width:24%;height:11%;border-radius:0 0 50% 50%;background:#eef2ff;box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}.print{position:absolute;z-index:3;top:var(--print-top);left:50%;transform:translateX(-50%);width:70%;text-align:center;color:var(--print-color);font-weight:800;font-size:clamp(13px,2.2vw,21px);line-height:1.2;overflow-wrap:anywhere;transition:.2s}.preview-meta{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:14px}.preview-meta strong{font-size:17px}.preview-meta span{color:var(--muted)}
+    .notice{margin-top:18px;border-radius:12px;background:#f8fafc;border:1px dashed #cbd5e1;padding:12px 14px;color:#475467;font-size:13px}.cart{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}.cart-row{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:14px}.empty{color:var(--muted);font-size:14px;margin:6px 0 0}.pill{display:inline-block;border-radius:999px;background:#ecfdf3;color:#027a48;padding:3px 9px;font-size:12px;font-weight:700}
+    footer{color:var(--muted);font-size:13px;margin-top:24px}code{background:#f2f4f7;border-radius:5px;padding:1px 5px}@media(max-width:760px){.grid{grid-template-columns:1fr}.preview-card{position:static}.wrap{padding-inline:14px}.card{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="demo">Concept Demo · 概念樣品 · 非正式系統</div>
+      <h1>把比賽服裝的客製選擇先看清楚</h1>
+      <p class="lead">這是一個使用合成商品資料的單一路徑示範：選擇衣服顏色、輸入印製文字與擺放位置，即時查看客製預覽，再加入本機購物車。</p>
+    </header>
+    <section class="grid" aria-label="客製商品示範">
+      <div class="card">
+        <h2>客製設定</h2>
+        <fieldset class="field"><legend>衣服顏色</legend><div class="choices swatches">
+          <label><input type="radio" name="color" value="#172554" data-name="深海藍" checked><span style="--swatch:#172554">深海藍</span></label>
+          <label><input type="radio" name="color" value="#be123c" data-name="莓果紅"><span style="--swatch:#be123c">莓果紅</span></label>
+          <label><input type="radio" name="color" value="#0f766e" data-name="森林綠"><span style="--swatch:#0f766e">森林綠</span></label>
+        </div></fieldset>
+        <div class="field"><label for="printText">印製文字</label><input id="printText" type="text" maxlength="18" value="TEAM 2026" placeholder="例如：TEAM 2026"><p class="hint">此示範只顯示文字預覽，不會送出正式訂單。</p></div>
+        <fieldset class="field"><legend>文字擺放位置</legend><div class="choices">
+          <label><input type="radio" name="position" value="25%" checked><span>胸前</span></label>
+          <label><input type="radio" name="position" value="48%"><span>中央</span></label>
+          <label><input type="radio" name="position" value="68%"><span>下擺</span></label>
+        </div></fieldset>
+        <div class="field"><label for="size">尺寸</label><select id="size"><option>S</option><option selected>M</option><option>L</option><option>XL</option></select></div>
+        <div class="actions"><button id="add">加入示範購物車</button><button class="secondary" id="reset" type="button">重設</button></div>
+        <div class="notice"><strong>正式合作後可串接：</strong>商品資料、客製化規則、正式購物車、金流、物流與訂單後台。這份樣品保留在瀏覽器本機，沒有使用任何正式帳號或 API。</div>
+      </div>
+      <div class="card preview-card">
+        <h2>即時預覽</h2>
+        <div class="stage"><div class="shirt" id="shirt" style="--shirt:#172554;--print-top:25%;--print-color:#f8fafc"><div class="shirt-body"></div><div class="shirt-neck"></div><div class="print" id="print">TEAM 2026</div></div></div>
+        <div class="preview-meta"><div><span>目前顏色</span><br><strong id="colorName">深海藍</strong></div><div style="text-align:right"><span>尺寸</span><br><strong id="sizeName">M</strong></div></div>
+        <div class="cart"><div class="cart-row"><strong>本機購物車</strong><span class="pill" id="cartCount">0 件</span></div><p class="empty" id="cartText">尚未加入示範商品。</p></div>
+      </div>
+    </section>
+    <footer>本頁僅供需求溝通與流程展示；資料為合成內容，非正式商業系統。</footer>
+  </main>
+<script>
+(() => {
+  const shirt = document.querySelector('#shirt');
+  const print = document.querySelector('#print');
+  const text = document.querySelector('#printText');
+  const colorName = document.querySelector('#colorName');
+  const size = document.querySelector('#size');
+  const sizeName = document.querySelector('#sizeName');
+  const cartCount = document.querySelector('#cartCount');
+  const cartText = document.querySelector('#cartText');
+  const cartKey = 'concept-demo-team-jersey-cart';
+  const getCart = () => { try { return JSON.parse(localStorage.getItem(cartKey) || '[]'); } catch (_) { return []; } };
+  const refreshCart = () => { const cart = getCart(); cartCount.textContent = `${cart.length} 件`; cartText.textContent = cart.length ? `已加入 ${cart[cart.length - 1].text}／${cart[cart.length - 1].color}／${cart[cart.length - 1].size} 的合成商品。` : '尚未加入示範商品。'; };
+  const update = () => {
+    const selectedColor = document.querySelector('input[name="color"]:checked');
+    const selectedPos = document.querySelector('input[name="position"]:checked');
+    const value = text.value.trim() || 'TEAM 2026';
+    shirt.style.setProperty('--shirt', selectedColor.value);
+    shirt.style.setProperty('--print-top', selectedPos.value);
+    print.textContent = value;
+    colorName.textContent = selectedColor.dataset.name;
+    sizeName.textContent = size.value;
+  };
+  document.querySelectorAll('input[name="color"], input[name="position"]').forEach(el => el.addEventListener('change', update));
+  text.addEventListener('input', update); size.addEventListener('change', update);
+  document.querySelector('#add').addEventListener('click', () => { const selectedColor = document.querySelector('input[name="color"]:checked'); const cart = getCart(); cart.push({text: text.value.trim() || 'TEAM 2026', color: selectedColor.dataset.name, size: size.value, createdAt: new Date().toISOString()}); localStorage.setItem(cartKey, JSON.stringify(cart)); refreshCart(); });
+  document.querySelector('#reset').addEventListener('click', () => { text.value = 'TEAM 2026'; document.querySelector('input[name="color"][value="#172554"]').checked = true; document.querySelector('input[name="position"][value="25%"]').checked = true; size.value = 'M'; update(); });
+  update(); refreshCart();
+})();
+</script>
+</body>
+</html>
