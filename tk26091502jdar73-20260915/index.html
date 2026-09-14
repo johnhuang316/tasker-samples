@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>餐廳來電歸因｜Concept Demo</title>
+  <style>
+    :root { --ink:#16212b; --muted:#66717c; --line:#dfe6ea; --accent:#1c7c72; --accent-2:#e6f4f1; --warm:#fff7e8; --bg:#f7f9fa; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif; line-height:1.65; }
+    .wrap { width:min(1080px, calc(100% - 32px)); margin:0 auto; }
+    header { padding:46px 0 30px; background:linear-gradient(135deg,#163d3a,#1c7c72); color:#fff; }
+    .eyebrow { letter-spacing:.12em; font-size:12px; opacity:.78; }
+    h1 { margin:8px 0 10px; font-size:clamp(28px,5vw,48px); line-height:1.18; }
+    header p { max-width:690px; margin:0; color:#dcecea; }
+    .notice { margin-top:22px; display:inline-flex; padding:8px 12px; border:1px solid rgba(255,255,255,.32); border-radius:999px; font-size:13px; }
+    main { padding:30px 0 56px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 8px 22px rgba(22,33,43,.04); }
+    .card h2 { margin:0 0 8px; font-size:20px; }
+    .muted { color:var(--muted); font-size:14px; }
+    label { display:block; margin:14px 0 6px; font-weight:600; font-size:14px; }
+    select,button { font:inherit; }
+    select { width:100%; padding:11px 12px; border:1px solid #c9d4d8; border-radius:10px; background:#fff; color:var(--ink); }
+    button { border:0; border-radius:10px; padding:11px 15px; margin-top:14px; cursor:pointer; color:#fff; background:var(--accent); font-weight:700; }
+    button.secondary { background:#eaf0f0; color:#1b4c48; margin-left:8px; }
+    button:focus-visible,select:focus-visible { outline:3px solid #9ad3ca; outline-offset:2px; }
+    .result { margin-top:16px; padding:14px; background:var(--accent-2); border-radius:12px; min-height:55px; }
+    .result strong { display:block; color:#155c54; }
+    .callout { margin-top:18px; padding:14px 16px; border-left:4px solid #d89e3e; background:var(--warm); border-radius:10px; font-size:14px; }
+    .wide { grid-column:1 / -1; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:12px; }
+    table { border-collapse:collapse; width:100%; min-width:620px; font-size:14px; }
+    th,td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:#f2f6f6; font-size:13px; color:#40535a; }
+    tr:last-child td { border-bottom:0; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#edf1f2; color:#52636b; font-size:12px; }
+    footer { color:var(--muted); font-size:13px; padding-top:18px; }
+    @media (max-width:720px) { .grid { grid-template-columns:1fr; } .wide { grid-column:auto; } header { padding-top:32px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">RESTAURANT ATTRIBUTION / CONCEPT DEMO</div>
+      <h1>讓每一通來電都能回到正確的廣告來源</h1>
+      <p>用模擬的 GCLID、動態追蹤號碼與來電紀錄，示範官網端取得歸因資訊、配對來電，並整理成 Google Sheet 可用的資料格式。</p>
+      <div class="notice">概念樣品｜假資料／mock API｜非正式系統</div>
+    </div>
+  </header>
+  <main>
+    <div class="wrap grid">
+      <section class="card">
+        <h2>1. 模擬訪客來源</h2>
+        <div class="muted">選擇一個來源，模擬官網收到訪客的 GCLID。</div>
+        <label for="source">訪客來源</label>
+        <select id="source">
+          <option value="gclid-demo-a1">Google Ads｜品牌搜尋（gclid-demo-a1）</option>
+          <option value="gclid-demo-b2">Google Ads｜附近餐廳（gclid-demo-b2）</option>
+          <option value="gclid-demo-c3">Google Ads｜外帶關鍵字（gclid-demo-c3）</option>
+        </select>
+        <button id="assign">載入動態追蹤號碼</button>
+        <div id="assignResult" class="result" aria-live="polite">尚未載入來源。</div>
+      </section>
+
+      <section class="card">
+        <h2>2. 模擬來電回呼</h2>
+        <div class="muted">以假電話事件測試「被叫號碼 → GCLID」的配對結果。</div>
+        <label for="callNumber">被叫追蹤號碼</label>
+        <select id="callNumber">
+          <option value="追蹤號碼 A">追蹤號碼 A</option>
+          <option value="追蹤號碼 B">追蹤號碼 B</option>
+          <option value="追蹤號碼 C">追蹤號碼 C</option>
+        </select>
+        <button id="record">寫入模擬 Google Sheet</button>
+        <button id="clear" class="secondary">清除本機資料</button>
+        <div id="callResult" class="result" aria-live="polite">尚未建立來電。</div>
+      </section>
+
+      <section class="card wide">
+        <h2>3. Google Sheet 欄位預覽</h2>
+        <div class="muted">此表格只保存在目前瀏覽器的 localStorage；正式合作後再接電話系統 API 與 Google Sheet 權限。</div>
+        <div class="table-wrap" style="margin-top:14px">
+          <table>
+            <thead><tr><th>被叫號碼</th><th>來電時間</th><th>對應 GCLID</th><th>來源</th><th>狀態</th></tr></thead>
+            <tbody id="rows"><tr><td colspan="5" class="muted">尚無資料，先完成上方的模擬來電。</td></tr></tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>正式串接範圍提示：</strong>目前使用 mock 來電事件與假 GCLID，沒有連接任何電話服務、Google 帳號或業主資料。正式合作後才依確認的電話 API、官網平台與欄位權限完成串接、錯誤處理與驗證。</div>
+      </section>
+      <footer class="wide">Concept Demo／概念樣品｜本頁僅示範核心流程，不代表正式上線系統或完整交付成果。</footer>
+    </div>
+  </main>
+  <script>
+    (() => {
+      const map = {
+        'gclid-demo-a1': { number: '追蹤號碼 A', source: 'Google Ads｜品牌搜尋' },
+        'gclid-demo-b2': { number: '追蹤號碼 B', source: 'Google Ads｜附近餐廳' },
+        'gclid-demo-c3': { number: '追蹤號碼 C', source: 'Google Ads｜外帶關鍵字' }
+      };
+      const key = 'tasker-gclid-demo-calls-v1';
+      const source = document.querySelector('#source');
+      const number = document.querySelector('#callNumber');
+      const assignResult = document.querySelector('#assignResult');
+      const callResult = document.querySelector('#callResult');
+      const rows = document.querySelector('#rows');
+      const getCalls = () => JSON.parse(localStorage.getItem(key) || '[]');
+      const esc = (s) => String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const render = () => {
+        const calls = getCalls();
+        rows.innerHTML = calls.length ? calls.map(c => `<tr><td>${esc(c.calledNumber)}</td><td>${esc(c.time)}</td><td><span class="pill">${esc(c.gclid)}</span></td><td>${esc(c.source)}</td><td>已配對（mock）</td></tr>`).join('') : '<tr><td colspan="5" class="muted">尚無資料，先完成上方的模擬來電。</td></tr>';
+      };
+      document.querySelector('#assign').addEventListener('click', () => {
+        const item = map[source.value];
+        number.value = item.number;
+        assignResult.innerHTML = `<strong>${esc(item.number)}</strong>已依 ${esc(source.value)} 建立模擬對應，可在右側觸發一筆來電。`;
+      });
+      document.querySelector('#record').addEventListener('click', () => {
+        const gclid = source.value;
+        const item = map[gclid];
+        const calledNumber = number.value;
+        const now = new Date().toLocaleString('zh-TW', { hour12:false });
+        const calls = getCalls();
+        const record = { calledNumber, time: now, gclid, source: item.source };
+        calls.unshift(record);
+        localStorage.setItem(key, JSON.stringify(calls.slice(0, 20)));
+        callResult.innerHTML = `<strong>已完成配對</strong>${esc(calledNumber)} → ${esc(gclid)}，並寫入一筆 mock Google Sheet 資料。`;
+        render();
+      });
+      document.querySelector('#clear').addEventListener('click', () => { localStorage.removeItem(key); callResult.textContent = '已清除本機模擬資料。'; render(); });
+      render();
+    })();
+  </script>
+</body>
+</html>
