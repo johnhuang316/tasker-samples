@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>直播訂單整理與 LINE 通知｜Concept Demo</title>
+  <style>
+    :root{--ink:#17233a;--muted:#667085;--line:#dfe5ee;--brand:#2764d8;--brand2:#e8efff;--ok:#087443;--okbg:#e7f7ef;--warn:#a65d12;--warnbg:#fff4e4;--bg:#f6f8fb;--card:#fff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.65}
+    .wrap{max-width:1120px;margin:auto;padding:28px 18px 70px}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;align-items:stretch;margin-bottom:22px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 26px rgba(32,53,88,.06)}.hero-main{padding:34px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);font-weight:800}.hero h1{margin:12px 0 10px;font-size:clamp(30px,5vw,52px);line-height:1.12;letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);font-size:18px}.badge{padding:28px;background:linear-gradient(145deg,#17233a,#284d9f);color:#fff;border-radius:18px;display:flex;flex-direction:column;justify-content:space-between}.badge strong{font-size:25px;line-height:1.25}.badge small{color:#dce7ff}.notice{padding:16px 18px;background:var(--warnbg);border:1px solid #f0d5ad;color:#70400f;border-radius:14px;margin-bottom:22px}.notice strong{display:block;margin-bottom:2px}.section{padding:24px;margin-bottom:20px}.section h2{margin:0 0 5px;font-size:24px}.section-lead{color:var(--muted);margin:0 0 18px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.step{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fbfcfe}.step b{display:flex;align-items:center;gap:8px;font-size:14px}.step i{font-style:normal;background:var(--brand2);color:var(--brand);border-radius:50%;width:26px;height:26px;display:grid;place-items:center}.step span{display:block;color:var(--muted);font-size:13px;margin-top:7px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:750;cursor:pointer;background:var(--brand);color:#fff}.btn.secondary{background:#edf2f8;color:var(--ink)}.btn:disabled{opacity:.45;cursor:not-allowed}.status{margin-left:auto;align-self:center;color:var(--muted);font-size:14px}.status.ok{color:var(--ok);font-weight:750}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{background:#f7f9fc;color:var(--muted);font-size:12px}tr:last-child td{border-bottom:0}.chip{display:inline-block;padding:3px 8px;border-radius:99px;background:#eef2f6;color:#465267;font-size:12px}.chip.done{background:var(--okbg);color:var(--ok)}.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fcfdff}.panel h3{margin:0 0 10px;font-size:17px}.slip{background:#fff;border:1px dashed #a9b6c8;border-radius:10px;padding:18px;min-height:150px}.slip h4{margin:0 0 8px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap}.empty{color:var(--muted);font-size:14px}.footer{color:var(--muted);font-size:13px;margin-top:18px}@media(max-width:760px){.hero,.cols{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.status{width:100%;margin-left:0}}@media print{body{background:#fff}.hero,.notice,.steps,.toolbar,.footer{display:none!important}.section{box-shadow:none;border:0}.cols{grid-template-columns:1fr}.card{box-shadow:none;border:0}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="eyebrow">Concept Demo · 概念樣品</div>
+        <h1>直播訂單整理<br>與 LINE 通知</h1>
+        <p>用假直播事件示範「匯入 → 整理 → 列印 → 通知」的一條核心流程。</p>
+      </div>
+      <div class="badge"><small>非正式系統／Mock data</small><strong>直播留言進來後，先整理成可交付的訂單資料。</strong><small>不會連到真實 IG、FB、Excel 或 LINE。</small></div>
+    </section>
+
+    <div class="notice"><strong>展示邊界</strong>這是安全的概念展示，所有直播留言、客戶識別與 LINE 回應都是假資料。正式合作後才依可取得的 IG／FB 資料來源、權限、Excel 欄位與 LINE 官方帳號條件進行技術盤點與串接。</div>
+
+    <section class="card section">
+      <h2>核心流程</h2>
+      <p class="section-lead">按順序操作即可看見每一步的輸出；重新整理頁面會保留目前的 mock 結果。</p>
+      <div class="steps">
+        <div class="step"><b><i>1</i>匯入直播事件</b><span>讀入假留言與商品資料</span></div>
+        <div class="step"><b><i>2</i>整理訂單</b><span>合併同一位客人的 +1</span></div>
+        <div class="step"><b><i>3</i>列印得標單</b><span>產生可列印的出貨單</span></div>
+        <div class="step"><b><i>4</i>LINE 通知</b><span>預覽並模擬送出明細</span></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn" id="importBtn">匯入假直播事件</button>
+        <button class="btn secondary" id="normalizeBtn" disabled>整理成訂單</button>
+        <button class="btn secondary" id="printBtn" disabled>產生列印單</button>
+        <button class="btn secondary" id="notifyBtn" disabled>模擬傳送 LINE 明細</button>
+        <span class="status" id="status">尚未匯入資料</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>事件</th><th>直播暱稱</th><th>商品</th><th>數量</th><th>狀態</th></tr></thead>
+          <tbody id="eventRows"><tr><td colspan="5" class="empty">按「匯入假直播事件」開始</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="cols">
+        <div class="panel"><h3>可下載的 Excel 相容資料</h3><p class="empty" id="orderHint">整理訂單後會出現合併結果。</p><div class="table-wrap" id="orderTable" hidden></div><button class="btn secondary" id="csvBtn" disabled>下載 CSV</button></div>
+        <div class="panel"><h3>列印得標單預覽</h3><div class="slip" id="slip"><span class="empty">尚未產生列印單。</span></div></div>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="cols">
+        <div class="panel"><h3>LINE 明細預覽</h3><div class="slip mono" id="linePreview">尚未產生通知。</div></div>
+        <div class="panel"><h3>Mock 執行紀錄</h3><div class="slip mono" id="log">等待操作。</div></div>
+      </div>
+      <p class="footer">正式版本仍需確認直播資料取得方式、官方帳號權限、訂單欄位、列印格式與例外處理。本樣品不執行真實交易或訊息傳送。</p>
+    </section>
+  </main>
+<script>
+(() => {
+  const seed = [
+    {id:"L-001", nick:"小葵", product:"澳洲蜂蜜 300g", qty:2, line:"mock-U-001"},
+    {id:"L-002", nick:"小葵", product:"澳洲蜂蜜 300g", qty:1, line:"mock-U-001"},
+    {id:"L-003", nick:"阿哲", product:"蜂膠噴劑", qty:1, line:"mock-U-002"},
+    {id:"L-004", nick:"米米", product:"蜂膠牙膏", qty:2, line:"mock-U-003"}
+  ];
+  const key = "tasker-demo-live-order-v1";
+  const $ = id => document.getElementById(id);
+  const state = JSON.parse(localStorage.getItem(key) || '{"events":[],"orders":[],"printed":false,"notified":false,"logs":[]}');
+  const log = message => { state.logs = (state.logs || []).concat(new Date().toLocaleTimeString("zh-TW") + "  " + message); $("log").textContent = state.logs.slice(-6).join("\n"); localStorage.setItem(key, JSON.stringify(state)); };
+  const render = () => {
+    const rows = state.events || [];
+    $("eventRows").innerHTML = rows.length ? rows.map(x => `<tr><td>${x.id}</td><td>${x.nick}</td><td>${x.product}</td><td>${x.qty}</td><td><span class="chip ${state.orders.length ? "done" : ""}">${state.orders.length ? "已整理" : "待整理"}</span></td></tr>`).join("") : '<tr><td colspan="5" class="empty">按「匯入假直播事件」開始</td></tr>';
+    $("normalizeBtn").disabled = !rows.length;
+    $("printBtn").disabled = !(state.orders || []).length;
+    $("notifyBtn").disabled = !(state.orders || []).length;
+    $("csvBtn").disabled = !(state.orders || []).length;
+    if ((state.orders || []).length) {
+      $("orderHint").hidden = true; $("orderTable").hidden = false;
+      $("orderTable").innerHTML = `<table><thead><tr><th>訂單編號</th><th>LINE 識別</th><th>商品</th><th>數量</th></tr></thead><tbody>${state.orders.map(x => `<tr><td>${x.order}</td><td>${x.line}</td><td>${x.product}</td><td>${x.qty}</td></tr>`).join("")}</tbody></table>`;
+      $("slip").innerHTML = state.printed ? `<h4>Mock 得標單 #${state.orders[0].order}</h4><div>商品：${state.orders.map(x => x.product + " × " + x.qty).join("、")}</div><div>狀態：<span class="chip done">可列印</span></div>` : '<span class="empty">按「產生列印單」建立預覽。</span>';
+      $("linePreview").textContent = state.notified ? state.orders.map(x => `【Mock LINE】${x.line}\n${x.product} × ${x.qty}\n訂單：${x.order}\n狀態：已模擬傳送`).join("\n\n") : "按「模擬傳送 LINE 明細」建立預覽。";
+    }
+    if (state.notified) { $("status").textContent = "核心流程完成（Mock）"; $("status").className = "status ok"; }
+    else if (state.printed) { $("status").textContent = "已產生列印單，尚可模擬通知"; $("status").className = "status"; }
+    else if ((state.orders || []).length) { $("status").textContent = "訂單已整理"; $("status").className = "status"; }
+    else if (rows.length) { $("status").textContent = "已匯入假事件"; $("status").className = "status"; }
+    $("log").textContent = (state.logs || []).slice(-6).join("\n") || "等待操作。";
+  };
+  $("importBtn").onclick = () => { state.events = seed.map(x => ({...x})); state.orders = []; state.printed = false; state.notified = false; state.logs = []; log("已匯入 4 筆假直播事件"); render(); };
+  $("normalizeBtn").onclick = () => { const grouped = {}; for (const x of state.events) { const k = x.nick + "|" + x.product; grouped[k] ||= {order:"DEMO-001",line:x.line,product:x.product,qty:0}; grouped[k].qty += x.qty; } state.orders = Object.values(grouped); log("已將直播 +1 合併成 " + state.orders.length + " 筆訂單"); render(); };
+  $("printBtn").onclick = () => { state.printed = true; log("已建立得標單預覽（可另行接正式印表流程）"); render(); };
+  $("notifyBtn").onclick = () => { state.notified = true; log("已產生並模擬傳送 LINE 明細，未連接真實帳號"); render(); };
+  $("csvBtn").onclick = () => { const body = ["訂單編號,LINE識別,商品,數量", ...state.orders.map(x => `${x.order},${x.line},${x.product},${x.qty}`)].join("\n"); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + body], {type:"text/csv;charset=utf-8"})); a.download = "concept-orders.csv"; a.click(); log("已下載 Excel 相容 CSV"); };
+  render();
+})();
+</script>
+</body>
+</html>
