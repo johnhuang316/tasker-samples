@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 社群發文工作台｜Concept Demo</title>
+  <style>
+    :root{--ink:#172033;--muted:#6b7280;--line:#e5e7eb;--bg:#f5f7fb;--card:#fff;--blue:#3867ff;--blue-dark:#2347c8;--green:#0e9f6e;--amber:#b7791f;--shadow:0 18px 50px rgba(31,45,79,.09)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.6}
+    .top{background:linear-gradient(120deg,#18264e,#3867ff);color:#fff;padding:34px 20px 76px}.wrap{max-width:1120px;margin:auto}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.78}.top h1{font-size:clamp(28px,5vw,48px);line-height:1.15;margin:12px 0 14px}.top p{max-width:680px;margin:0;color:#dce5ff}.badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:5px 11px;font-size:12px;margin-top:24px;background:rgba(255,255,255,.1)}
+    main{margin-top:-42px;padding:0 20px 64px}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}.card{background:var(--card);border:1px solid rgba(229,231,235,.9);border-radius:20px;box-shadow:var(--shadow);padding:24px}.card h2{font-size:19px;margin:0 0 5px}.hint{margin:0 0 20px;color:var(--muted);font-size:14px}.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}.step{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;color:var(--muted);background:#fafbff}.step strong{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}.step.active{border-color:#9eb0ff;background:#f0f3ff}.label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.04em;margin:17px 0 6px}.select,.input{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px 12px;color:var(--ink);font:inherit}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.btn{border:0;border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer;transition:.18s transform,.18s background}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue-dark)}.btn.secondary{background:#edf1ff;color:#2745b1}.btn.ghost{background:#f4f5f7;color:#4b5563}.btn:disabled{cursor:not-allowed;opacity:.45;transform:none}
+    .preview{min-height:420px;background:#fbfcff;border:1px solid var(--line);border-radius:15px;padding:16px}.preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.platform{font-weight:800;font-size:14px}.status{font-size:12px;padding:4px 9px;border-radius:999px;background:#eef0f4;color:#657083}.status.ready{background:#fff7df;color:var(--amber)}.status.published{background:#dcf8ed;color:#08754f}.mock-image{height:154px;border-radius:12px;background:linear-gradient(135deg,#eaf0ff,#d8e0ff 52%,#c9f3e4);display:flex;align-items:center;justify-content:center;color:#3550a8;font-weight:800;margin-bottom:15px;position:relative;overflow:hidden}.mock-image:after{content:"MOCK AI VISUAL";position:absolute;bottom:10px;right:12px;font-size:10px;letter-spacing:.12em;color:rgba(23,32,51,.48)}.post-title{font-weight:800;font-size:18px;line-height:1.35;margin-bottom:8px}.post-copy{white-space:pre-line;color:#4b5563;font-size:14px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.pill{font-size:12px;background:#eef2ff;color:#3e54a6;border-radius:999px;padding:4px 8px}.notice{border-radius:12px;padding:12px 14px;background:#f7f8fa;color:#6b7280;font-size:13px;margin-top:16px}.notice.ok{background:#ecfbf4;color:#08754f}.notice.warn{background:#fff8e8;color:#8a5b11}.log{margin:16px 0 0;padding:0;list-style:none}.log li{border-top:1px solid var(--line);padding:10px 0;font-size:13px;display:flex;gap:10px}.dot{width:8px;height:8px;border-radius:50%;background:#cbd5e1;margin-top:8px;flex:0 0 auto}.dot.blue{background:var(--blue)}.dot.green{background:var(--green)}.side-note{font-size:13px;color:#596579;margin-top:18px}.side-note strong{color:var(--ink)}.footer{max-width:1120px;margin:18px auto 0;padding:0 20px;color:#8791a3;font-size:12px}.footer a{color:#6078c8}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.top{padding-bottom:64px}.two{grid-template-columns:1fr}.flow{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="wrap">
+    <div class="eyebrow">AI WORKFLOW / CONCEPT DEMO</div>
+    <h1>社群發文工作台</h1>
+    <p>用一條可操作流程示範：生成文案與配圖草稿 → 人工核准 → 模擬發佈到 Facebook 粉絲專頁。</p>
+    <div class="badge">● 概念樣品／非正式系統　｜　合成資料與 Mock 流程</div>
+  </div></header>
+  <main><div class="wrap grid">
+    <section class="card">
+      <h2>建立一則貼文草稿</h2>
+      <p class="hint">目前不會連到任何真實帳號；所有內容都在瀏覽器本機模擬。</p>
+      <div class="flow"><div class="step active" id="s1"><strong>01　生成</strong>AI 草稿與配圖提示</div><div class="step" id="s2"><strong>02　審核</strong>人工確認內容</div><div class="step" id="s3"><strong>03　發佈</strong>模擬送出結果</div></div>
+      <div class="two"><div><div class="label">發佈目標</div><select class="select" id="target"><option>Facebook 粉絲專頁</option><option>Instagram 商業帳號（概念）</option></select></div><div><div class="label">內容主題</div><select class="select" id="topic"><option>工廠節能設備</option><option>產品維護提醒</option><option>企業服務介紹</option></select></div></div>
+      <div class="label">補充方向（可選）</div><input class="input" id="brief" placeholder="例如：希望語氣簡潔、帶出節能效益">
+      <div class="actions"><button class="btn primary" id="generate">生成 AI 草稿</button><button class="btn ghost" id="reset">清除重做</button></div>
+      <div class="notice warn" id="notice">尚未生成草稿。按下「生成 AI 草稿」開始示範。</div>
+    </section>
+    <section class="card">
+      <div class="preview-head"><div class="platform">貼文預覽</div><div class="status" id="status">等待草稿</div></div>
+      <div class="preview">
+        <div class="mock-image" id="image">等待 AI 配圖</div>
+        <div class="post-title" id="postTitle">尚未生成內容</div>
+        <div class="post-copy" id="postCopy">完成生成後，這裡會顯示使用合成資料的貼文草稿。</div>
+        <div class="meta"><span class="pill" id="targetPill">Facebook 粉絲專頁</span><span class="pill">人工核准後才可發佈</span></div>
+        <div class="actions"><button class="btn secondary" id="approve" disabled>送出人工審核</button><button class="btn primary" id="publish" disabled>模擬發佈</button></div>
+      </div>
+      <ul class="log" id="log"><li><span class="dot"></span><span>尚未有操作紀錄</span></li></ul>
+    </section>
+  </div></main>
+  <div class="footer"><div class="wrap">Concept Demo｜正式合作後才會依帳號權限、Meta 官方流程、素材來源與驗收範圍進行實際串接。此頁不保存個資、不使用 token，也不會真的發文。</div></div>
+<script>
+  const $=id=>document.getElementById(id);
+  let state='idle';
+  const data={
+    '工廠節能設備':{title:'讓每一次用電，都更接近精準管理',copy:'設備穩定運轉，能源管理也可以更有依據。\n\n我們以即時資料掌握工廠用電狀況，協助團隊找出可優化的環節，讓節能規劃更容易落地。\n\n#工廠管理 #節能設備 #智慧製造'},
+    '產品維護提醒':{title:'定期維護，讓設備保持最佳狀態',copy:'提前掌握保養節點，減少臨時停機造成的影響。\n\n從日常檢查到維護紀錄，建立可追蹤的管理習慣，讓現場團隊更安心。\n\n#設備維護 #製造業 #現場管理'},
+    '企業服務介紹':{title:'把複雜流程整理成團隊都能使用的方法',copy:'每個團隊都有自己的工作節奏。\n\n我們協助企業整理流程、資料與執行步驟，讓日常作業更清楚，也更容易持續改善。\n\n#企業服務 #流程管理 #數位轉型'}
+  };
+  function addLog(text,kind=''){const li=document.createElement('li');li.innerHTML='<span class="dot '+kind+'"></span><span>'+text+'</span>'; $('log').prepend(li)}
+  function setStep(n){['s1','s2','s3'].forEach((id,i)=>$(id).classList.toggle('active',i<n));}
+  function generate(){const topic=$('topic').value, brief=$('brief').value.trim(), d=data[topic]; $('image').textContent='AI 配圖 Mock：'+topic; $('postTitle').textContent=d.title; $('postCopy').textContent=d.copy+(brief?'\n\n補充方向：'+brief:''); $('targetPill').textContent=$('target').value; $('status').textContent='待人工審核'; $('status').className='status ready'; $('notice').textContent='草稿已建立。請先檢視內容，再送出人工審核。'; $('notice').className='notice'; $('approve').disabled=false; $('publish').disabled=true; state='draft'; setStep(1); addLog('已生成文案與配圖提示（Mock）','blue');}
+  function approve(){if(state!=='draft')return; $('status').textContent='已核准，待發佈'; $('notice').textContent='人工核准完成。下一步可模擬發佈；正式系統會在此處檢查權限與 API 回應。'; $('notice').className='notice ok'; $('approve').disabled=true; $('publish').disabled=false; state='approved'; setStep(2); addLog('人工審核通過','blue');}
+  function publish(){if(state!=='approved')return; $('status').textContent='已模擬發佈'; $('status').className='status published'; $('notice').textContent='概念流程完成：已模擬送出至 '+$('target').value+'。此頁沒有呼叫真實 Meta API。'; $('notice').className='notice ok'; $('publish').disabled=true; state='published'; setStep(3); addLog('已完成 Mock 發佈（未連接真實帳號）','green');}
+  function reset(){state='idle'; $('image').textContent='等待 AI 配圖'; $('postTitle').textContent='尚未生成內容'; $('postCopy').textContent='完成生成後，這裡會顯示使用合成資料的貼文草稿。'; $('targetPill').textContent=$('target').value; $('status').textContent='等待草稿'; $('status').className='status'; $('notice').textContent='尚未生成草稿。按下「生成 AI 草稿」開始示範。'; $('notice').className='notice warn'; $('approve').disabled=true; $('publish').disabled=true; $('log').innerHTML='<li><span class="dot"></span><span>尚未有操作紀錄</span></li>'; setStep(1);}
+  $('generate').onclick=generate; $('approve').onclick=approve; $('publish').onclick=publish; $('reset').onclick=reset; $('target').onchange=()=>{if(state==='idle')$('targetPill').textContent=$('target').value};
+</script>
+</body>
+</html>
