@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>排班預約系統｜Concept Demo</title>
+  <style>
+    :root{--ink:#172033;--muted:#6b7280;--line:#e5e7eb;--bg:#f5f7fb;--card:#fff;--brand:#2463eb;--green:#138a5b;--orange:#b45309}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif}
+    .wrap{max-width:1080px;margin:auto;padding:28px 18px 48px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px}
+    h1{font-size:clamp(25px,4vw,40px);margin:0 0 8px;letter-spacing:-.03em}.sub{margin:0;color:var(--muted);line-height:1.7}.badge{white-space:nowrap;background:#eaf1ff;color:#174ea6;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 22px rgba(23,32,51,.05)}
+    .card h2{font-size:18px;margin:0 0 14px}.field{margin:0 0 14px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.select,.input{width:100%;border:1px solid #d1d5db;border-radius:10px;padding:11px 12px;font:inherit;background:#fff;color:var(--ink)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:10px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer}.btn.primary{background:var(--brand);color:#fff}.btn.secondary{background:#eef2f7;color:var(--ink)}.btn.green{background:#e6f6ef;color:#087344}.btn:active{transform:translateY(1px)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #d8dee9;border-radius:999px;padding:7px 10px;background:#fff;color:#334155;cursor:pointer;font-size:13px}.chip.active{border-color:var(--brand);background:#eaf1ff;color:#174ea6}
+    .summary{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:13px;line-height:1.8;font-size:14px}.summary strong{color:#0f172a}.status{margin-top:14px;border-radius:12px;padding:12px 13px;background:#f8fafc;color:#475569;line-height:1.6;font-size:14px;min-height:48px}.status.ok{background:#ecfdf5;color:#065f46}.status.warn{background:#fff7ed;color:#9a3412}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}td:last-child{text-align:right}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:10px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.blue{background:var(--brand)}.orange{background:#f59e0b}.green-dot{background:#16a34a}.foot{margin-top:18px;color:var(--muted);font-size:12px;line-height:1.7}
+    @media (max-width:760px){.hero{display:block}.badge{display:inline-block;margin-top:12px}.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.wrap{padding:20px 14px 36px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div><h1>排班預約系統</h1><p class="sub">Concept Demo｜用合成資料示範多品牌排班、預約與 GPS 打卡判定。</p></div>
+      <div class="badge">概念樣品・非正式系統</div>
+    </header>
+    <section class="grid">
+      <div class="card">
+        <h2>建立一筆預約</h2>
+        <div class="field"><label for="brand">品牌／餐廳</label><select id="brand" class="select"></select></div>
+        <div class="row">
+          <div class="field"><label for="date">日期</label><input id="date" class="input" type="date"></div>
+          <div class="field"><label for="slot">班別</label><select id="slot" class="select"><option>早班 09:00–14:00</option><option>晚班 14:00–20:00</option><option>全天 09:00–20:00</option></select></div>
+        </div>
+        <div class="field"><label>預約時段</label><div class="chips" id="times"></div></div>
+        <div class="summary" id="preview"></div>
+        <button class="btn primary" id="reserve">模擬建立預約</button>
+        <div class="status" id="reserveStatus">選擇品牌、日期與時段後即可查看預約結果。</div>
+      </div>
+      <div class="card">
+        <h2>GPS 打卡判定（模擬）</h2>
+        <p class="sub" style="margin-bottom:14px">不讀取真實定位；按下按鈕後以假資料示範成功與超出範圍兩種結果。</p>
+        <div class="summary"><strong>目前門市：</strong><span id="locationName">台北一店</span><br><strong>允許半徑：</strong>100 公尺<br><strong>測試距離：</strong><span id="distance">—</span></div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px"><button class="btn green" id="clockIn">模擬正常打卡</button><button class="btn secondary" id="clockOut">模擬超出範圍</button></div>
+        <div class="status" id="clockStatus">尚未執行打卡判定。</div>
+      </div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <h2>本次預約清單</h2>
+      <table><thead><tr><th>品牌</th><th>日期／時段</th><th>班別</th><th>狀態</th></tr></thead><tbody id="bookingRows"></tbody></table>
+      <div class="legend"><span><i class="dot blue"></i>已建立</span><span><i class="dot green-dot"></i>打卡成功</span><span><i class="dot orange"></i>需確認</span></div>
+    </section>
+    <p class="foot">此頁面只示範第一版互動與驗收邊界，使用假資料與瀏覽器端 localStorage；正式合作後再依實際品牌規則、定位授權、帳號權限與部署方式確認。</p>
+  </main>
+  <script>
+    const brands = ['台北一店','台北二店','新北板橋店','桃園中壢店','新竹店','台中一店','台南店','高雄店'];
+    const times = ['09:30','11:00','13:30','15:00','17:30'];
+    const brand = document.querySelector('#brand'), date = document.querySelector('#date'), slot = document.querySelector('#slot');
+    const timesEl = document.querySelector('#times'), preview = document.querySelector('#preview'), reserveStatus = document.querySelector('#reserveStatus');
+    const rows = document.querySelector('#bookingRows'); let selectedTime = times[0];
+    brands.forEach(x => brand.add(new Option(x,x)));
+    const today = new Date(); date.value = new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    times.forEach((x,i)=>{const b=document.createElement('button');b.className='chip'+(i===0?' active':'');b.textContent=x;b.type='button';b.onclick=()=>{selectedTime=x;document.querySelectorAll('.chip').forEach(y=>y.classList.remove('active'));b.classList.add('active');renderPreview()};timesEl.appendChild(b)});
+    function renderPreview(){preview.innerHTML='<strong>預覽：</strong>'+brand.value+'｜'+date.value+' '+selectedTime+'｜'+slot.value}
+    function loadBookings(){let data=[];try{data=JSON.parse(localStorage.getItem('tasker-demo-bookings')||'[]')}catch(e){};rows.innerHTML=data.length?data.map(x=>`<tr><td>${x.brand}</td><td>${x.date} ${x.time}</td><td>${x.slot}</td><td style="color:#2463eb;font-weight:700">${x.status}</td></tr>`).join(''):'<tr><td colspan="4" style="color:#6b7280">尚無資料，建立預約後會顯示在這裡。</td></tr>'}
+    document.querySelector('#reserve').onclick=()=>{const item={brand:brand.value,date:date.value,time:selectedTime,slot:slot.value,status:'已建立（模擬）'};let data=[];try{data=JSON.parse(localStorage.getItem('tasker-demo-bookings')||'[]')}catch(e){};data.unshift(item);localStorage.setItem('tasker-demo-bookings',JSON.stringify(data.slice(0,8)));reserveStatus.className='status ok';reserveStatus.textContent='預約已建立（概念流程），可在下方清單查看。';loadBookings()};
+    document.querySelector('#clockIn').onclick=()=>{document.querySelector('#distance').textContent='42 公尺';const s=document.querySelector('#clockStatus');s.className='status ok';s.textContent='模擬判定成功：距離在允許範圍內，已記錄打卡時間。'};
+    document.querySelector('#clockOut').onclick=()=>{document.querySelector('#distance').textContent='286 公尺';const s=document.querySelector('#clockStatus');s.className='status warn';s.textContent='模擬判定需確認：距離超過允許半徑，未建立正式打卡。'};
+    [brand,date,slot].forEach(x=>x.addEventListener('change',renderPreview)); renderPreview(); loadBookings();
+  </script>
+</body>
+</html>
